@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+yt-dlp
+gallery-dl
+requests
+python-dotenv
+pydantic-settings
+aiosqlite
+apscheduler
+pytz # APScheduler 的时区依赖 / Timezone dependency for APScheduler
+python-multipart # 用于 FastAPI 文件上传 / For FastAPI file uploads
+passlib[bcrypt]==4.0.1 # 密码哈希 / Password hashing
+python-jose[cryptography] # JWT 令牌处理 / JWT token handling

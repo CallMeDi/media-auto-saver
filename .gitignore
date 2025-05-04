@@ -172,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Other
+*.sql
+*.db
+/backend/media
+/backend/logs
+
