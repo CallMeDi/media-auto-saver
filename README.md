@@ -1,6 +1,9 @@
 # Media Auto Saver
 
+[简体中文](README.zh-CN.md)
+
 Automatically download or record media from various websites based on added links.
+This project is in its early stages and has many areas that need improvement and enhancement. **Contributors are very welcome**. And if you have interesting ideas for this project, feel free to discuss.
 
 ## Features
 
@@ -78,6 +81,7 @@ Automatically download or record media from various websites based on added link
         cd ..
         ```
 
+<!--
 ## Configuration
 
 1.  **Copy the example environment file:**
@@ -95,6 +99,7 @@ Automatically download or record media from various websites based on added link
     *   `LINK_MONITOR_INTERVAL_MINUTES`: How often the scheduler checks links (default: 60).
     *   `MAX_CONCURRENT_DOWNLOADS`: Maximum parallel download tasks (default: 5).
     *   `SITE_COOKIES_JSON`: (Optional) JSON string mapping lowercase site names to cookie file paths for global cookies (e.g., `{"pixiv": "/path/to/pixiv_cookies.txt"}`).
+ -->
 
 ## Running the Application
 
