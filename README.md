@@ -16,6 +16,19 @@ This project is in its early stages and has many areas that need improvement and
 *   Password reset functionality.
 *   Configurable via `.env` file.
 
+## Examples
+*   Login Page
+    ![Login Page](/samples/images/WebUI/登录页面.PNG)
+*   Link Page
+    ![Link Page](/samples/images/WebUI/链接页面.PNG)
+*   Add Link
+    ![Add Link](/samples/images/WebUI/添加链接.PNG)
+*   Settings Page
+    ![Settings Page](/samples/images/WebUI/设置页面.PNG)
+*   History Page
+    ![History Page](/samples/images/WebUI/下载历史.PNG)
+
+
 ## Dependencies
 
 ### Backend (Python)
@@ -128,3 +141,5 @@ This project is in its early stages and has many areas that need improvement and
     *   The frontend UI will be available at the address shown in the terminal (usually `http://localhost:5173` or similar).
 
 Access the frontend URL in your browser to use the application. Log in with the initial superuser credentials if it's the first run.
+Username: admin
+Password: changeme
