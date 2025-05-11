@@ -34,10 +34,10 @@
 想要更深入地了解项目或参与贡献吗？请查阅以下资源：
 
 *   **了解项目：**
-    *   架构概览：[中文文档](docs/ARCHITECTURE.md)
-    *   API 文档：[中文文档](docs/API_DOCUMENTATION.md)
+    *   架构概览：[中文文档](docs/ARCHITECTURE.zh-CN.md)
+    *   API 文档：[中文文档](docs/API_DOCUMENTATION.zh-CN.md)
 *   **贡献者指南：**
-    *   贡献指南：[中文文档](docs/CONTRIBUTING.md)
+    *   贡献指南：[中文文档](docs/CONTRIBUTING.zh-CN.md)
 
 我们鼓励计划贡献代码或希望了解技术细节的您阅读这些文档。
 

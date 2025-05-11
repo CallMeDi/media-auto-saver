@@ -32,15 +32,15 @@ As an early-stage open-source project, there's plenty of room for improvement an
 
 ## Examples
 
-*   Login Page
+*   Login Page  
     ![Login Page](/docs/images/WebUI/登录页面.PNG)
-*   Link Page
+*   Link Page  
     ![Link Page](/docs/images/WebUI/链接页面.PNG)
-*   Add Link
+*   Add Link  
     ![Add Link](/docs/images/WebUI/添加链接.PNG)
-*   Settings Page
+*   Settings Page  
     ![Settings Page](/docs/images/WebUI/设置页面.PNG)
-*   History Page
+*   History Page  
     ![History Page](/docs/images/WebUI/下载历史.PNG)
 
 ## Documentation & Community
@@ -48,10 +48,10 @@ As an early-stage open-source project, there's plenty of room for improvement an
 Want to dive deeper into the project or contribute? Check out these resources:
 
 *   **Understanding the Project:**
-    *   Architecture Overview: [中文](docs/ARCHITECTURE.md) | [English](docs/ARCHITECTURE.en.md)
-    *   API Documentation: [中文](docs/API_DOCUMENTATION.md) | [English](docs/API_DOCUMENTATION.en.md)
+    *   Architecture Overview: [中文](docs/ARCHITECTURE.zh-CN.md.md) | [English](docs/ARCHITECTURE.en.md)
+    *   API Documentation: [中文](docs/API_DOCUMENTATION.zh-CN.md) | [English](docs/API_DOCUMENTATION.en.md)
 *   **For Contributors:**
-    *   Contribution Guidelines: [中文](docs/CONTRIBUTING.md) | [English](docs/CONTRIBUTING.en.md)
+    *   Contribution Guidelines: [中文](docs/CONTRIBUTING.zh-CN.md) | [English](docs/CONTRIBUTING.en.md)
 
 We encourage you to read these documents if you plan to contribute or want to understand the technical details.
 
