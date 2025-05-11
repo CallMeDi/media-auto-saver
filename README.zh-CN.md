@@ -34,10 +34,10 @@
 想要更深入地了解项目或参与贡献吗？请查阅以下资源：
 
 *   **了解项目：**
-    *   架构概览：[中文文档](ARCHITECTURE.md)
-    *   API 文档：[中文文档](API_DOCUMENTATION.md)
+    *   架构概览：[中文文档](docs/ARCHITECTURE.md)
+    *   API 文档：[中文文档](docs/API_DOCUMENTATION.md)
 *   **贡献者指南：**
-    *   贡献指南：[中文文档](CONTRIBUTING.md)
+    *   贡献指南：[中文文档](docs/CONTRIBUTING.md)
 
 我们鼓励计划贡献代码或希望了解技术细节的您阅读这些文档。
 
@@ -71,7 +71,7 @@
 
 1.  **克隆仓库：**
     ```bash
-    git clone <repository_url> # 请将 <repository_url> 替换为实际的仓库地址
+    git clone https://github.com/CallMeDi/media-auto-saver.git 
     cd media-auto-saver
     ```
 

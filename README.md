@@ -33,25 +33,25 @@ As an early-stage open-source project, there's plenty of room for improvement an
 ## Examples
 
 *   Login Page
-    ![Login Page](/samples/images/WebUI/登录页面.PNG)
+    ![Login Page](/docs/images/WebUI/登录页面.PNG)
 *   Link Page
-    ![Link Page](/samples/images/WebUI/链接页面.PNG)
+    ![Link Page](/docs/images/WebUI/链接页面.PNG)
 *   Add Link
-    ![Add Link](/samples/images/WebUI/添加链接.PNG)
+    ![Add Link](/docs/images/WebUI/添加链接.PNG)
 *   Settings Page
-    ![Settings Page](/samples/images/WebUI/设置页面.PNG)
+    ![Settings Page](/docs/images/WebUI/设置页面.PNG)
 *   History Page
-    ![History Page](/samples/images/WebUI/下载历史.PNG)
+    ![History Page](/docs/images/WebUI/下载历史.PNG)
 
 ## Documentation & Community
 
 Want to dive deeper into the project or contribute? Check out these resources:
 
 *   **Understanding the Project:**
-    *   Architecture Overview: [中文](ARCHITECTURE.md) | [English](ARCHITECTURE.en.md)
-    *   API Documentation: [中文](API_DOCUMENTATION.md) | [English](API_DOCUMENTATION.en.md)
+    *   Architecture Overview: [中文](docs/ARCHITECTURE.md) | [English](docs/ARCHITECTURE.en.md)
+    *   API Documentation: [中文](docs/API_DOCUMENTATION.md) | [English](docs/API_DOCUMENTATION.en.md)
 *   **For Contributors:**
-    *   Contribution Guidelines: [中文](CONTRIBUTING.md) | [English](CONTRIBUTING.en.md)
+    *   Contribution Guidelines: [中文](docs/CONTRIBUTING.md) | [English](docs/CONTRIBUTING.en.md)
 
 We encourage you to read these documents if you plan to contribute or want to understand the technical details.
 
@@ -85,7 +85,7 @@ We encourage you to read these documents if you plan to contribute or want to un
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository_url> # Replace <repository_url> with the actual URL
+    git clone https://github.com/CallMeDi/media-auto-saver.git 
     cd media-auto-saver
     ```
 
@@ -119,26 +119,6 @@ We encourage you to read these documents if you plan to contribute or want to un
         ```bash
         cd ..
         ```
-
-<!--
-## Configuration
-
-1.  **Copy the example environment file:**
-    ```bash
-    # If .env doesn't exist, create it from scratch or copy if an example exists
-    # cp .env.example .env # Assuming an example file exists
-    ```
-    *Note: An example file wasn't provided, so create `.env` manually if needed.*
-
-2.  **Edit the `.env` file** in the project root directory:
-    *   `SECRET_KEY`: **Required** for JWT authentication. Generate a strong secret key (e.g., using `openssl rand -hex 32`). The existing one is for example purposes only.
-    *   `DATABASE_URL`: Defaults to `sqlite+aiosqlite:///./database.db` in the project root. Change if needed.
-    *   `MEDIA_ROOT`: Defaults to `./media` in the project root. Change where downloaded files should be stored.
-    *   `INITIAL_SUPERUSER_USERNAME`, `INITIAL_SUPERUSER_PASSWORD`, `INITIAL_SUPERUSER_EMAIL`: Set credentials for the first admin user created on startup if no superuser exists. **Strongly recommended** to set these, especially the password (default is 'changeme').
-    *   `LINK_MONITOR_INTERVAL_MINUTES`: How often the scheduler checks links (default: 60).
-    *   `MAX_CONCURRENT_DOWNLOADS`: Maximum parallel download tasks (default: 5).
-    *   `SITE_COOKIES_JSON`: (Optional) JSON string mapping lowercase site names to cookie file paths for global cookies (e.g., `{"pixiv": "/path/to/pixiv_cookies.txt"}`).
- -->
 
 ## Running the Application
 
