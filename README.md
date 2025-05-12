@@ -4,7 +4,7 @@
 
 Media Auto Saver is a powerful tool designed to automatically download or record media from various websites based on user-added links. Whether you want to archive content from your favorite creators or save live streams, this project aims to simplify the process.
 
-As an early-stage open-source project, there's plenty of room for improvement and new features. We warmly welcome contributors of all levels! If you have exciting ideas or want to help enhance the project, please feel free to join the discussion and contribute.
+As an early-stage open-source project, there's plenty of room for improvement and new features. We warmly welcome contributors of all levels! If you have exciting ideas or want to help enhance the project, please feel free to join the discussion and contribute at https://discord.gg/XBP8trYmyP.
 
 ## Table of Contents
 
