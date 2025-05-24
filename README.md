@@ -1,36 +1,52 @@
+<!-- Optional: Add a project logo or banner here -->
+<!-- e.g., <p align="center"><img src="path/to/logo.png" alt="Media Auto Saver Logo" width="200"/></p> -->
+
 # Media Auto Saver
 
 [简体中文](README.zh-CN.md)
 
-Media Auto Saver is a powerful tool designed to automatically download or record media from various websites based on user-added links. Whether you want to archive content from your favorite creators or save live streams, this project aims to simplify the process.
+<p align="center">
+  <!-- CI Status -->
+  <a href="https://github.com/CallMeDi/media-auto-saver/actions/workflows/ci.yml"><img src="https://github.com/CallMeDi/media-auto-saver/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
+  <!-- License -->
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/CallMeDi/media-auto-saver" alt="License"></a>
+  <!-- Discord -->
+  <a href="https://discord.gg/XBP8trYmyP"><img src="https://img.shields.io/discord/1158991319205019738?logo=discord&label=Discord&color=7289DA" alt="Discord"></a>
+</p>
 
-As an early-stage open-source project, there's plenty of room for improvement and new features. We warmly welcome contributors of all levels! If you have exciting ideas or want to help enhance the project, please feel free to join the discussion and contribute at https://discord.gg/XBP8trYmyP.
+**Media Auto Saver** is your personal, automated media archiving assistant. It diligently downloads or records content from various websites based on links you provide, making it effortless to build a local archive of your favorite creators, series, or live streams. Set up your links and let Media Auto Saver handle the rest!
+
+This open-source project is actively developed and welcomes contributions. Whether you're looking to add support for new sites, enhance existing features, or improve the user experience, we'd love to have your input. Join our community and help shape the future of Media Auto Saver!
+
+💬 **Join the discussion and contribute on Discord: https://discord.gg/XBP8trYmyP**
 
 ## Table of Contents
 
 - [Media Auto Saver](#media-auto-saver)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
-  - [Examples](#examples)
-  - [Documentation \& Community](#documentation--community)
+  - [Screenshots](#screenshots)
   - [Technology Stack](#technology-stack)
-    - [Backend (Python)](#backend-python)
-    - [Frontend (Node.js)](#frontend-nodejs)
   - [Setup and Installation](#setup-and-installation)
   - [Running the Application](#running-the-application)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Documentation & Community](#documentation--community)
 
-## Features
+## ✨ Features
 
-*   **Flexible Link Management**: Add links to creators (e.g., YouTube channels, Pixiv artists) or specific live streams.
-*   **Automated Monitoring**: Automatically monitors enabled links based on a user-configurable schedule.
-*   **Versatile Downloading**: Downloads new media using `yt-dlp` for videos/audio and `gallery-dl` for images/galleries.
-*   **Download History**: Keeps a comprehensive history of all download attempts (both successes and failures).
-*   **Web Interface**: A user-friendly Web UI (Vue.js frontend) for managing links, viewing history, and configuring settings.
-*   **Secure Authentication**: User authentication implemented with JWT.
-*   **Password Management**: Includes password reset functionality.
-*   **Easy Configuration**: Configurable via a simple `.env` file.
+*   **Flexible Link Management**: Easily add and manage links to your favorite creators (e.g., YouTube channels, Pixiv artists) or specific live streams.
+*   **Automated Content Archiving**: Set up a schedule and let Media Auto Saver automatically monitor active links for new content.
+*   **Versatile Downloading Power**: Leverages `yt-dlp` for a wide range of video/audio content and `gallery-dl` for image galleries and artist pages.
+*   **Comprehensive Download History**: Keep track of all download activities, including successes, failures, and downloaded files.
+*   **User-Friendly Web Interface**: A clean and modern Web UI (built with Vue.js) for managing links, viewing history, and adjusting settings.
+*   **Secure User Authentication**: Protects your setup with JWT-based authentication and password management features (including password reset).
+*   **Advanced Cookie Management**: Supports both global and link-specific cookie configurations for accessing sites that require login.
+*   **Database Management**: Includes options to export and import the application database for backups or migration.
+*   **Easy Configuration**: Primarily configured via a straightforward `.env` file for simple setup.
+*   **Extensible & Open Source**: Built with a modular architecture, ready for community contributions and new features!
 
-## Examples
+## 📸 Screenshots
 
 *   Login Page  
     ![Login Page](/docs/images/WebUI/登录页面.PNG)
@@ -43,109 +59,192 @@ As an early-stage open-source project, there's plenty of room for improvement an
 *   History Page  
     ![History Page](/docs/images/WebUI/下载历史.PNG)
 
+## 🛠️ Technology Stack
+
+The project is built with a modern Python backend and a Vue.js frontend.
+
+### Backend (Python)
+
+*   **Python Version**: `3.13.3` (as specified in `.python-version`). Developed and tested with this version.
+*   **Framework**: [FastAPI](https://fastapi.tiangolo.com/) for high-performance web APIs.
+*   **Database**: [SQLModel](https://sqlmodel.tiangolo.com/) for ORM, using SQLite with `aiosqlite` for asynchronous operations.
+*   **Task Scheduling**: [APScheduler](https://apscheduler.readthedocs.io/) for background job management.
+*   **Media Downloaders**:
+    *   `yt-dlp`: For video and audio content.
+    *   `gallery-dl`: For image galleries and artist pages. (Note: `gallery-dl` CLI should be accessible).
+*   **Authentication**: JWT tokens handled by `Passlib` and `python-jose`.
+*   **Testing**:
+    *   `pytest` for unit and integration tests.
+    *   `pytest-cov` for code coverage.
+    *   `pytest-asyncio` for asynchronous test support.
+*   **Linting**: `Flake8` is used for code style checking.
+*   **Server**: `Uvicorn` as the ASGI server.
+*   *(See `backend/requirements.txt` for all production dependencies and `backend/requirements-dev.txt` for development tools.)*
+
+### Frontend (Vue.js)
+
+*   **Node.js Version**: LTS versions (e.g., 20.x or later) are recommended. (CI uses 20.x).
+*   **Framework**: [Vue.js 3](https://vuejs.org/) (Composition API).
+*   **Build Tool**: [Vite](https://vitejs.dev/) for fast development and optimized builds.
+*   **State Management**: [Pinia](https://pinia.vuejs.org/).
+*   **Routing**: [Vue Router](https://router.vuejs.org/).
+*   **HTTP Client**: [Axios](https://axios-http.com/).
+*   **UI Components**: [Element Plus](https://element-plus.org/).
+*   **Testing**:
+    *   `Vitest`: Unit and component testing framework.
+    *   `@vue/test-utils`: For Vue component interaction in tests.
+*   **Linting**: ESLint and Prettier (setup recommended, CI may enforce).
+*   *(See `frontend/package.json` for all dependencies and development tools.)*
+
+## 🚀 Setup and Installation
+
+Follow these steps to get Media Auto Saver up and running on your local machine.
+
+### Prerequisites
+
+*   **Git**: For cloning the repository.
+*   **Python**: Version `3.13.3` (see `.python-version`). A recent Python 3.10+ version should generally work.
+*   **Node.js**: LTS version (e.g., 20.x or later, matching CI).
+*   **npm** or **yarn**: For frontend package management.
+*   (`Optional`) `gallery-dl` CLI tool: While the Python package might provide it, ensuring the command-line tool `gallery-dl` is independently installed and in your system's PATH can be beneficial for the media downloading features.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/CallMeDi/media-auto-saver.git
+cd media-auto-saver
+```
+
+### 2. Backend Setup (Python)
+
+*   **Navigate to backend directory:**
+    ```bash
+    cd backend
+    ```
+*   **(Recommended)** Create and activate a Python virtual environment:
+    ```bash
+    python3 -m venv venv
+    # On Linux/macOS:
+    source venv/bin/activate
+    # On Windows:
+    # venv\Scripts\activate
+    ```
+*   **Install dependencies:**
+    *   For running the application:
+        ```bash
+        pip install -r requirements.txt
+        ```
+    *   For development (e.g., running tests, linting):
+        ```bash
+        pip install -r requirements-dev.txt
+        ```
+*   **Configure Environment Variables:**
+    *   Create a `.env` file in the `backend` directory. (e.g., `touch .env` or copy from a future `.env.example`).
+    *   Edit `backend/.env` and add the following critical variable:
+        ```env
+        SECRET_KEY=your_strong_random_secret_key_here 
+        # Example: openssl rand -hex 32
+        ```
+    *   You can also override other default settings in `backend/.env` if needed:
+        ```env
+        # INITIAL_SUPERUSER_USERNAME=admin
+        # INITIAL_SUPERUSER_PASSWORD=changeme
+        # DATABASE_URL=sqlite+aiosqlite:///./database.db  # Relative to backend directory
+        # MEDIA_ROOT=../media  # Relative to backend directory
+        # MAX_CONCURRENT_DOWNLOADS=5
+        # LINK_MONITOR_INTERVAL_MINUTES=60
+        # SITE_COOKIES_JSON='{"example.com": "path/to/cookies.txt"}'
+        ```
+        Refer to `backend/app/core/config.py` for all available settings and their default values. The paths for `DATABASE_URL` and `MEDIA_ROOT` in the example above are relative to the `backend` directory if you prefer that, or you can use absolute paths. By default, they are in the project root.
+*   **Verify `gallery-dl` (if installed separately):**
+    ```bash
+    gallery-dl --version
+    ```
+*   **Return to the project root directory:**
+    ```bash
+    cd ..
+    ```
+
+### 3. Frontend Setup (Vue.js)
+
+*   **Navigate to frontend directory:**
+    ```bash
+    cd frontend
+    ```
+*   **Install dependencies:**
+    ```bash
+    npm install
+    # or yarn install
+    ```
+*   **Return to the project root directory (optional, for context):**
+    ```bash
+    cd ..
+    ```
+
+## ▶️ Running the Application
+
+Once you have completed the setup and installation steps:
+
+### 1. Run the Backend Server (FastAPI)
+
+*   **Ensure you are in the project root directory (`media-auto-saver`).**
+*   **Activate your Python virtual environment** (if you created one during setup):
+    ```bash
+    # On Linux/macOS:
+    source backend/venv/bin/activate 
+    # On Windows:
+    # backend\venv\Scripts\activate
+    ```
+    *(Adjust path if your venv is named differently or located elsewhere relative to the project root)*
+*   **Navigate to the backend directory and start the Uvicorn server:**
+    ```bash
+    cd backend
+    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ```
+*   The backend API will now be accessible at `http://localhost:8000`.
+*   Interactive API documentation (Swagger UI) is available at `http://localhost:8000/api/v1/docs`.
+
+### 2. Run the Frontend Development Server (Vite)
+
+*   **Open a new terminal window/tab.**
+*   **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+*   **Start the Vite development server:**
+    ```bash
+    npm run dev
+    # or yarn dev
+    ```
+*   The frontend UI will typically be accessible at `http://localhost:5173` (Vite will confirm the exact URL in the terminal).
+
+### Accessing the Application
+
+Open the frontend URL (e.g., `http://localhost:5173`) in your web browser.
+
+*   **Default Superuser Credentials:**
+    *   Username: `admin`
+    *   Password: `changeme`
+    *(These are the defaults if not overridden in your `backend/.env` file. It is strongly recommended to change the default password immediately via the "Settings" page after your first login, especially if deploying this application.)*
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+We welcome contributions of all types, from bug reports and feature requests to code enhancements and documentation improvements. Please refer to our [Contribution Guidelines](docs/CONTRIBUTING.en.md) for details on how to get started, including how to set up your development environment and run tests.
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## Documentation & Community
 
 Want to dive deeper into the project or contribute? Check out these resources:
 
 *   **Understanding the Project:**
-    *   Architecture Overview: [中文](docs/ARCHITECTURE.zh-CN.md.md) | [English](docs/ARCHITECTURE.en.md)
+    *   Architecture Overview: [中文](docs/ARCHITECTURE.zh-CN.md) | [English](docs/ARCHITECTURE.en.md)
     *   API Documentation: [中文](docs/API_DOCUMENTATION.zh-CN.md) | [English](docs/API_DOCUMENTATION.en.md)
 *   **For Contributors:**
     *   Contribution Guidelines: [中文](docs/CONTRIBUTING.zh-CN.md) | [English](docs/CONTRIBUTING.en.md)
 
 We encourage you to read these documents if you plan to contribute or want to understand the technical details.
-
-## Technology Stack
-
-### Backend (Python)
-
-*   **Python Version**: 3.8+
-*   **Key Packages**: (See `backend/requirements.txt` for a full list)
-    *   FastAPI (for the web framework)
-    *   SQLModel (ORM, with aiosqlite for async SQLite)
-    *   Uvicorn (ASGI server)
-    *   APScheduler (for background task scheduling)
-    *   yt-dlp (for video/audio downloading)
-    *   gallery-dl (for image/gallery downloading)
-    *   Passlib, python-jose (for authentication and JWT)
-*   **External CLI Tool**: `gallery-dl` must be installed and accessible in your system's PATH. (Installing the `gallery-dl` Python package via `requirements.txt` usually handles this).
-
-### Frontend (Node.js)
-
-*   **Node.js Version**: Check `frontend/package.json` for compatibility (LTS recommended).
-*   **Package Manager**: npm or yarn
-*   **Key Packages**: (See `frontend/package.json` for a full list)
-    *   Vue.js 3 (core frontend framework)
-    *   Vite (build tool and dev server)
-    *   Pinia (state management)
-    *   Vue Router (routing)
-    *   Axios (HTTP client)
-
-## Setup and Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/CallMeDi/media-auto-saver.git 
-    cd media-auto-saver
-    ```
-
-2.  **Backend Setup:**
-    *   (Recommended) Create and activate a Python virtual environment:
-        ```bash
-        python3 -m venv venv
-        source venv/bin/activate # On Linux/macOS
-        # venv\Scripts\activate # On Windows
-        ```
-    *   Install backend dependencies:
-        ```bash
-        pip install -r backend/requirements.txt
-        ```
-    *   Verify `gallery-dl` command is working:
-        ```bash
-        gallery-dl --version
-        ```
-
-3.  **Frontend Setup:**
-    *   Navigate to the frontend directory:
-        ```bash
-        cd frontend
-        ```
-    *   Install frontend dependencies:
-        ```bash
-        npm install
-        # or yarn install
-        ```
-    *   Return to the project root directory:
-        ```bash
-        cd ..
-        ```
-
-## Running the Application
-
-1.  **Run the Backend (FastAPI):**
-    *   Ensure you are in the project root directory (`media-auto-saver`).
-    *   If using a Python virtual environment, make sure it's activated.
-    *   Start the Uvicorn server:
-        ```bash
-        cd backend
-        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-        ```
-    *   The API will be accessible at `http://localhost:8000`.
-    *   Interactive API documentation (Swagger UI) is available at `http://localhost:8000/api/v1/docs`.
-
-2.  **Run the Frontend (Vue/Vite):**
-    *   Open a *new* terminal window.
-    *   Navigate to the frontend directory:
-        ```bash
-        cd frontend
-        ```
-    *   Start the Vite development server:
-        ```bash
-        npm run dev
-        # or yarn dev
-        ```
-    *   The frontend UI will be accessible at the address shown in your terminal (usually `http://localhost:5173` or a similar port).
-
-Access the frontend URL in your browser to use the application. If it's your first time running the app, log in with the initial superuser credentials:
-Username: `admin`
-Password: `changeme` (Please change this in a production environment!)
