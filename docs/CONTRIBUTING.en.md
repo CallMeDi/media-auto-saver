@@ -56,7 +56,7 @@ We greatly appreciate code contributions! Please follow these steps to submit a 
     ```
     Please use meaningful branch names, e.g., `feature/add-new-downloader` or `fix/login-page-bug`.
 4.  **Make your changes**: Make your code modifications on the new branch.
-5.  **Test your changes**: Ensure your changes do not break existing functionality and add new test cases whenever possible.
+5.  **Test your changes**: Ensure your changes do not break existing functionality. Run the automated tests to verify your changes and add new test cases for new features or bug fixes. See the [Testing Guide](#testing-guide) for details on how to run tests.
 6.  **Commit your changes**: Write commit messages following the [Commit Guidelines](#commit-guidelines).
     ```bash
     git add .
@@ -98,6 +98,56 @@ To maintain consistency and readability of the codebase, please adhere to the fo
   - Follow the existing coding style of the project (e.g., ESLint and Prettier configurations, if present).
   - Write maintainable and reusable components.
   - Add appropriate comments for Vue components and JavaScript functions.
+
+## Testing Guide
+
+We aim for a comprehensive automated testing process to ensure code quality and stability. The project uses Pytest for backend testing and Vitest for frontend testing.
+
+### Backend Testing
+
+-   **Tools Used:**
+    -   `pytest`: Core testing framework.
+    -   `pytest-cov`: For code coverage measurement.
+    -   `pytest-asyncio`: For testing asynchronous code (used by default in our setup).
+    -   Mocks are handled using Python's built-in `unittest.mock`.
+-   **Running Tests:**
+    1.  Navigate to the `backend` directory: `cd backend`
+    2.  Ensure you have installed development dependencies from `requirements-dev.txt` (this includes `pytest` and `pytest-cov`):
+        ```bash
+        pip install -r requirements-dev.txt
+        ```
+    3.  Run all tests:
+        ```bash
+        pytest
+        ```
+        This command will automatically discover and run tests. Coverage reports (HTML and XML) will be generated in the `backend/htmlcov/` and `backend/coverage.xml` respectively, as configured in `pytest.ini`. A summary, including missing lines, will also be printed to the console.
+-   **Coverage Reports:**
+    -   After running tests, you can open `backend/htmlcov/index.html` in your browser to view the detailed HTML coverage report.
+
+### Frontend Testing
+
+-   **Tools Used:**
+    -   `Vitest`: Test runner, designed for Vite projects.
+    -   `@vue/test-utils`: For mounting and interacting with Vue components.
+    -   `jsdom`: To simulate a browser environment for tests.
+-   **Running Tests:**
+    1.  Navigate to the `frontend` directory: `cd frontend`
+    2.  Ensure you have installed dependencies:
+        ```bash
+        npm install
+        ```
+        (or `npm ci` if `package-lock.json` is up-to-date).
+    3.  Run all tests:
+        ```bash
+        npm test
+        ```
+        This command (defined in `package.json` as `vitest run`) executes all tests and generates coverage reports as configured in `vite.config.js`.
+-   **Coverage Reports:**
+    -   Coverage reports for the frontend are generated in the `frontend/coverage/` directory. You can find an HTML report there (usually `frontend/coverage/index.html`).
+
+### CI Pipeline
+
+All contributions will be automatically tested by our CI pipeline (GitHub Actions) when you open a Pull Request. The pipeline runs linters and the full test suites for both backend and frontend, including coverage checks. Please ensure your changes pass all CI checks.
 
 ## Commit Guidelines
 

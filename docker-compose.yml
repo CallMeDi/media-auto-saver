@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env  # Path relative to docker-compose.yml (project root)
+    volumes:
+      # Mount the database file for persistence
+      # Assumes database.db is in project root on host, mapped to /app_code/database.db in container
+      - ./database.db:/app_code/database.db
+      # Mount the media folder for persistence
+      # Assumes media/ is in project root on host, mapped to /app_code/media in container
+      - ./media:/app_code/media
+      # Mount the user_cookies folder
+      # Assumes user_cookies/ is in project root on host, mapped to /app_code/user_cookies in container
+      - ./user_cookies:/app_code/user_cookies
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80" # Map host port 5173 to container's Nginx port 80
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
