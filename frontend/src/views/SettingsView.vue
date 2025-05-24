@@ -10,31 +10,29 @@
                     <span>数据库管理 / Database Management</span>
                 </div>
             </template>
-            <div class="setting-item">
-                <label>导出数据库 / Export Database:</label>
-                <el-button @click="exportDatabase" :loading="exporting" type="primary" size="small">
-                    {{ exporting ? '导出中...' : '导出 / Export' }}
-                </el-button>
-                <p v-if="exportError" class="error-message">{{ exportError }}</p>
-            </div>
-            <div class="setting-item">
-                <label>导入数据库 / Import Database:</label>
-                <div class="import-section">
-                    <input type="file" ref="fileInputRef" @change="handleFileChange" accept=".sql" :disabled="importing"
-                        style="display: none;" />
-                    <el-button @click="triggerFileInput" size="small" :disabled="importing">选择文件 / Choose
-                        File</el-button>
-                    <span v-if="selectedFile" class="file-name">{{ selectedFile.name }}</span>
-                    <el-button @click="importDatabase" :disabled="!selectedFile || importing" type="danger"
-                        size="small">
-                        {{ importing ? '导入中...' : '导入并覆盖 / Import & Overwrite' }}
+            <el-form label-position="left" label-width="220px">
+                <el-form-item label="导出数据库 / Export Database:">
+                    <el-button @click="exportDatabase" :loading="exporting" type="primary" size="small">
+                        {{ exporting ? '导出中...' : '导出 / Export' }}
                     </el-button>
-                </div>
-                <p class="warning-message">警告: 导入将覆盖当前所有数据! / Warning: Import will overwrite all current data!</p>
-                <p v-if="importMessage" :class="importError ? 'error-message' : 'success-message'">
-                    {{ importMessage }}
-                </p>
-            </div>
+                    <el-text v-if="exportError" type="danger" size="small" style="margin-left: 10px;">{{ exportError }}</el-text>
+                </el-form-item>
+
+                <el-form-item label="导入数据库 / Import Database:">
+                    <el-space wrap>
+                        <input type="file" ref="fileInputRef" @change="handleFileChange" accept=".sql" :disabled="importing" style="display: none;" />
+                        <el-button @click="triggerFileInput" size="small" :disabled="importing">选择文件 / Choose File</el-button>
+                        <el-text v-if="selectedFile" class="file-name" size="small">{{ selectedFile.name }}</el-text>
+                        <el-button @click="importDatabase" :disabled="!selectedFile || importing" type="danger" size="small">
+                            {{ importing ? '导入中...' : '导入并覆盖 / Import & Overwrite' }}
+                        </el-button>
+                    </el-space>
+                    <el-text type="warning" size="small" style="display: block; margin-top: 5px;">
+                        警告: 导入将覆盖当前所有数据! / Warning: Import will overwrite all current data!
+                    </el-text>
+                    <el-alert v-if="importMessage" :title="importMessage" :type="importError ? 'error' : 'success'" show-icon closable @close="importMessage = null" style="margin-top: 10px;" />
+                </el-form-item>
+            </el-form>
         </el-card>
 
         <!-- 账户设置 -->
@@ -45,10 +43,11 @@
                     <span>账户设置 / Account Settings</span>
                 </div>
             </template>
-            <div class="setting-item">
-                <label>修改密码 / Change Password:</label>
-                <el-button @click="showPasswordDialog = true" type="primary" plain size="small">修改 / Change</el-button>
-            </div>
+            <el-form label-position="left" label-width="220px">
+                <el-form-item label="修改密码 / Change Password:">
+                    <el-button @click="showPasswordDialog = true" type="primary" plain size="small">修改 / Change</el-button>
+                </el-form-item>
+            </el-form>
             <!-- TODO: 添加用户名/邮箱修改 (如果需要) / Add username/email change (if needed) -->
         </el-card>
 
@@ -69,20 +68,15 @@
             </p>
             <el-form label-position="top" style="margin-top: 15px;">
                 <el-form-item v-for="(path, site) in siteCookies" :key="site" :label="`${site} Cookies Path:`">
-                    <el-input v-model="siteCookies[site]" :placeholder="`例如: backend/${site}_cookies.txt`" />
-                    <el-button type="danger" plain size="small" @click="removeSiteCookie(site)"
-                        style="margin-left: 10px;">移除 /
-                        Remove</el-button>
+                    <el-input v-model="siteCookies[site]" :placeholder="`例如: backend/${site}_cookies.txt`" style="max-width: 400px;" />
+                    <el-button type="danger" plain size="small" @click="removeSiteCookie(site)" style="margin-left: 10px;">移除 / Remove</el-button>
                 </el-form-item>
                 <el-form-item label="添加新网站 / Add New Site:">
-                    <el-input v-model="newSiteName"
-                        placeholder="网站域名 (小写, 例如 weibo.com) / Site domain (lowercase, e.g., weibo.com)"
-                        style="width: 250px; margin-right: 10px;" />
-                    <el-input v-model="newSiteCookiePath" placeholder="Cookies 文件路径 / Cookies file path"
-                        style="flex-grow: 1; margin-right: 10px;" />
-                    <el-button type="success" plain @click="addSiteCookie"
-                        :disabled="!newSiteName || !newSiteCookiePath">添加 /
-                        Add</el-button>
+                    <el-space wrap :size="10">
+                        <el-input v-model="newSiteName" placeholder="网站域名 (小写, 例如 weibo.com) / Site domain (lowercase, e.g., weibo.com)" style="width: 250px;" />
+                        <el-input v-model="newSiteCookiePath" placeholder="Cookies 文件路径 / Cookies file path" style="min-width: 250px; flex-grow: 1;" />
+                        <el-button type="success" plain @click="addSiteCookie" :disabled="!newSiteName || !newSiteCookiePath">添加 / Add</el-button>
+                    </el-space>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="saveSiteCookies" :loading="savingCookies">保存全局 Cookies / Save
@@ -135,7 +129,7 @@ import { ref, reactive, onMounted } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 // 确保导入所有使用的 Element Plus 组件 / Ensure all used Element Plus components are imported
-import { ElCard, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElAlert, ElMessageBox } from 'element-plus';
+import { ElCard, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElAlert, ElMessageBox, ElSpace, ElText } from 'element-plus';
 
 const authStore = useAuthStore(); // 认证状态管理 / Authentication state management
 
@@ -391,50 +385,15 @@ onMounted(() => {
     font-weight: bold;
 }
 
-.setting-item {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    /* 项目间距 / Gap between items */
-}
-
-.setting-item label {
-    min-width: 200px;
-    /* 确保标签对齐 / Ensure labels align */
-    font-weight: 500;
-}
-
-.import-section {
-    display: flex;
-    align-items: center;
-}
+/* Removed .setting-item and related label styling as el-form-item is used */
 
 .file-name {
-    margin-left: 10px;
+    /* margin-left: 10px; Handled by el-space */
     font-style: italic;
-    color: #606266;
+    /* color: #606266; /* ElText default or type will handle */
 }
 
-.warning-message {
-    color: #E6A23C;
-    font-size: 0.9em;
-    margin-top: 5px;
-    margin-left: 10px;
-    /* 与按钮对齐 / Align with button */
-}
-
-.error-message {
-    color: #F56C6C;
-    font-size: 0.9em;
-    margin-top: 5px;
-}
-
-.success-message {
-    color: #67C23A;
-    font-size: 0.9em;
-    margin-top: 5px;
-}
+/* Removed .warning-message, .error-message, .success-message as el-text or el-alert are used */
 
 .form-tip {
     font-size: 0.8em;

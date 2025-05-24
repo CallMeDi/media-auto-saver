@@ -16,10 +16,10 @@
                         placeholder="请再次输入新密码 / Enter new password again" show-password required />
                 </el-form-item>
                 <el-form-item v-if="message">
-                    <el-alert type="success" :title="message" show-icon :closable="false" />
+                    <el-alert type="success" :title="message" show-icon :closable="true" @close="message = null" />
                 </el-form-item>
                 <el-form-item v-if="error">
-                    <el-alert type="error" :title="error" show-icon :closable="false" />
+                    <el-alert type="error" :title="error" show-icon :closable="true" @close="error = null" />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" native-type="submit" :loading="loading" style="width: 100%;">
@@ -28,7 +28,7 @@
                 </el-form-item>
             </el-form>
             <div class="extra-links">
-                <router-link to="/login">返回登录 / Back to Login</router-link>
+                <el-link type="primary" @click="goToLogin">返回登录 / Back to Login</el-link>
             </div>
         </el-card>
     </div>
@@ -36,7 +36,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { ElCard, ElForm, ElFormItem, ElInput, ElButton, ElAlert, ElMessage } from 'element-plus';
+import { ElCard, ElForm, ElFormItem, ElInput, ElButton, ElAlert, ElMessage, ElLink } from 'element-plus';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router'; // Import useRoute and useRouter
 
@@ -84,6 +84,10 @@ const handleResetPassword = async () => {
         loading.value = false;
     }
 };
+
+const goToLogin = () => {
+    router.push('/login');
+};
 </script>
 
 <style scoped>
@@ -91,7 +95,7 @@ const handleResetPassword = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - var(--el-header-height, 60px) - var(--el-footer-height, 60px) - 40px);
 }
 
 .reset-card {

@@ -2,24 +2,20 @@
     <div class="links-view">
         <h2>链接管理 / Link Management</h2>
 
-        <div class="toolbar">
-            <el-button type="primary" @click="openAddDialog" :loading="linkStore.linkLoading[0]">添加链接 / Add
-                Link</el-button>
-            <el-button @click="refreshLinks" :loading="linkStore.isLoading">刷新 / Refresh</el-button>
-            <el-input v-model="filterText" placeholder="过滤链接 (名称或URL) / Filter links (Name or URL)"
-                style="width: 200px; margin-left: 10px;" clearable />
-            <el-button @click="applyFilter">过滤 / Filter</el-button>
-        </div>
-
-        <!-- 主列表加载状态 -->
-        <!-- Main list loading state -->
-        <div v-if="linkStore.isLoading" class="loading-indicator">加载中... / Loading...</div>
+        <el-row justify="end" class="toolbar">
+            <el-space wrap>
+                <el-button type="primary" @click="openAddDialog" :loading="linkStore.linkLoading[0]">添加链接 / Add Link</el-button>
+                <el-button @click="refreshLinks" :loading="linkStore.isLoading">刷新 / Refresh</el-button>
+                <el-input v-model="filterText" placeholder="过滤链接 (名称或URL) / Filter links (Name or URL)" style="width: 250px;" clearable />
+                <el-button @click="applyFilter" :disabled="linkStore.isLoading">过滤 / Filter</el-button>
+            </el-space>
+        </el-row>
 
         <!-- 单个链接操作错误提示 -->
         <!-- Single link operation error messages -->
-        <el-alert v-if="linkStore.error" :title="linkStore.error" type="error" show-icon closable />
+        <el-alert v-if="linkStore.error" :title="linkStore.error" type="error" show-icon closable style="margin-bottom: 15px;" />
 
-        <el-table :data="linkStore.linkList" style="width: 100%" stripe border>
+        <el-table :data="linkStore.linkList" style="width: 100%" stripe border v-loading="linkStore.isLoading">
             <el-table-column prop="id" label="ID" width="60" />
             <el-table-column prop="name" label="名称 / Name" min-width="150" show-overflow-tooltip />
             <el-table-column prop="url" label="URL" min-width="250" show-overflow-tooltip>
@@ -57,9 +53,9 @@
                         Trigger</el-button>
                     <el-button size="small" type="danger" @click="handleDelete(scope.row)"
                         :loading="linkStore.linkLoading[scope.row.id]">删除 / Delete</el-button>
-                    <div v-if="linkStore.linkErrors[scope.row.id]" class="link-error-message">
+                    <el-text v-if="linkStore.linkErrors[scope.row.id]" type="danger" size="small" class="link-error-display">
                         {{ linkStore.linkErrors[scope.row.id] }}
-                    </div>
+                    </el-text>
                 </template>
             </el-table-column>
             <el-table-column prop="last_checked_at" label="上次检查 / Last Checked" width="160" :formatter="formatDate" />
@@ -76,7 +72,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'; // 导入 computed / Import computed
-import { ElTable, ElTableColumn, ElButton, ElTag, ElSwitch, ElAlert, ElMessageBox } from 'element-plus';
+import { 
+    ElTable, ElTableColumn, ElButton, ElTag, ElSwitch, ElAlert, ElMessageBox, 
+    ElInput, ElSpace, ElRow, ElCol, ElText 
+} from 'element-plus';
 import { useLinkStore } from '@/stores/link';
 import LinkDialog from '@/components/LinkDialog.vue'; // 导入对话框组件 / Import dialog component
 
@@ -195,19 +194,25 @@ const handleManualTrigger = async (link) => {
 
 .toolbar {
     margin-bottom: 15px;
-    text-align: right;
+    /* text-align: right; removed, handled by el-row justify="end" */
 }
 
 .el-table {
-    margin-top: 15px;
+    margin-top: 15px; /* Retained for spacing under toolbar/alert */
+}
+
+.link-error-display {
+    display: block; /* Make it take its own line */
+    margin-top: 5px; /* Add some space above the error message */
 }
 
 a {
-    color: #409EFF;
+    color: var(--el-color-primary); /* Use Element Plus primary color for links */
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
+    color: var(--el-color-primary-light-3); /* Slightly lighter on hover */
 }
 </style>

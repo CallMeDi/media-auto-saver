@@ -2,20 +2,20 @@
     <div class="history-view">
         <h2>历史记录 / History</h2>
 
-        <div class="toolbar">
-            <el-input v-model="filterLinkID" placeholder="过滤链接 ID / Filter Link ID"
-                style="width: 150px; margin-right: 10px;" clearable />
-            <el-select v-model="filterStatus" placeholder="过滤状态 / Filter Status"
-                style="width: 150px; margin-right: 10px;" clearable>
-                <el-option label="成功 / Success" value="success"></el-option>
-                <el-option label="失败 / Failed" value="failed"></el-option>
-                <!-- Add other relevant statuses if needed -->
-            </el-select>
-            <el-button @click="applyFilter">过滤 / Filter</el-button>
-            <el-button @click="refreshHistory" :loading="historyStore.loadingStatus">刷新 / Refresh</el-button>
-        </div>
+        <el-row justify="end" class="toolbar">
+            <el-space wrap>
+                <el-input v-model="filterLinkID" placeholder="过滤链接 ID / Filter Link ID" style="width: 180px;" clearable />
+                <el-select v-model="filterStatus" placeholder="过滤状态 / Filter Status" style="width: 180px;" clearable>
+                    <el-option label="成功 / Success" value="success"></el-option>
+                    <el-option label="失败 / Failed" value="failed"></el-option>
+                    <!-- Add other relevant statuses if needed -->
+                </el-select>
+                <el-button @click="applyFilter" :disabled="historyStore.loadingStatus">过滤 / Filter</el-button>
+                <el-button @click="refreshHistory" :loading="historyStore.loadingStatus">刷新 / Refresh</el-button>
+            </el-space>
+        </el-row>
 
-        <el-alert v-if="historyStore.error" :title="historyStore.error" type="error" show-icon closable />
+        <el-alert v-if="historyStore.error" :title="historyStore.error" type="error" show-icon closable style="margin-bottom: 15px;" />
 
         <el-table :data="historyStore.logs" v-loading="historyStore.loadingStatus" style="width: 100%" stripe border>
             <el-table-column prop="id" label="ID" width="60" />
@@ -53,7 +53,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'; // 导入 ref / Import ref
-import { ElTable, ElTableColumn, ElButton, ElTag, ElAlert, ElMessageBox, ElInput, ElSelect, ElOption } from 'element-plus'; // 导入工具栏组件 / Import toolbar components
+import { 
+    ElTable, ElTableColumn, ElButton, ElTag, ElAlert, ElMessageBox, 
+    ElInput, ElSelect, ElOption, ElRow, ElSpace 
+} from 'element-plus'; // 导入工具栏组件 / Import toolbar components
 import { useHistoryStore } from '@/stores/history';
 
 const historyStore = useHistoryStore();
@@ -122,7 +125,7 @@ const handleDelete = async (log) => {
 
 .toolbar {
     margin-bottom: 15px;
-    text-align: right;
+    /* text-align: right; removed, handled by el-row justify="end" */
 }
 
 .el-table {

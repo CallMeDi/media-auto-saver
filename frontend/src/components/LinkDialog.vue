@@ -1,7 +1,7 @@
 <template>
     <el-dialog :model-value="props.modelValue" :title="isEditMode ? '编辑链接 / Edit Link' : '添加链接 / Add Link'"
         width="600px" @close="closeDialog" :close-on-click-modal="false">
-        <el-form ref="linkFormRef" :model="formData" :rules="rules" label-width="120px" label-position="top">
+        <el-form ref="linkFormRef" :model="formData" :rules="rules" label-position="top">
             <el-form-item label="URL" prop="url">
                 <el-input v-model="formData.url" placeholder="请输入链接 URL / Enter link URL" />
             </el-form-item>

@@ -1,28 +1,53 @@
 <template>
-    <div class="default-layout">
-        <header class="app-header">
-            <h1>Media Auto Saver</h1>
-            <nav v-if="authStore.isAuthenticated">
-                <router-link to="/">链接 / Links</router-link> |
-                <router-link to="/history">历史 / History</router-link> |
-                <router-link to="/settings">设置 / Settings</router-link> |
-                <button @click="logout">登出 / Logout</button>
-                <span v-if="authStore.currentUser" class="user-info">
-                    (用户 / User: {{ authStore.currentUser.username }})
-                </span>
-            </nav>
-        </header>
-        <main class="app-content">
+    <el-container direction="vertical" class="default-layout">
+        <el-header class="app-header">
+            <el-row justify="space-between" align="middle" style="width: 100%;">
+                <el-col :span="8">
+                    <h1>Media Auto Saver</h1>
+                </el-col>
+                <el-col :span="16" style="text-align: right;">
+                    <el-menu v-if="authStore.isAuthenticated" mode="horizontal" :router="true" class="app-nav">
+                        <el-menu-item index="/">
+                            <router-link to="/">链接 / Links</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="/history">
+                            <router-link to="/history">历史 / History</router-link>
+                        </el-menu-item>
+                        <el-menu-item index="/settings">
+                            <router-link to="/settings">设置 / Settings</router-link>
+                        </el-menu-item>
+                        <!-- User Dropdown -->
+                        <el-dropdown v-if="authStore.currentUser" class="user-dropdown" trigger="click">
+                            <span class="el-dropdown-link">
+                                用户 / User: {{ authStore.currentUser.username }} <i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item @click="logout">登出 / Logout</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </el-menu>
+                </el-col>
+            </el-row>
+        </el-header>
+        <el-main class="app-content">
             <router-view /> <!-- 页面组件将在这里渲染 / Page components will render here -->
-        </main>
-        <footer class="app-footer">
+        </el-main>
+        <el-footer class="app-footer">
             <!-- 页脚内容 (可选) / Footer content (optional) -->
-        </footer>
-    </div>
+            <p>&copy; {{ new Date().getFullYear() }} Media Auto Saver. All rights reserved.</p>
+        </el-footer>
+    </el-container>
 </template>
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
+import { 
+    ElContainer, ElHeader, ElMain, ElFooter, 
+    ElRow, ElCol, ElMenu, ElMenuItem, 
+    ElButton, ElDropdown, ElDropdownMenu, ElDropdownItem 
+} from 'element-plus';
 
 const authStore = useAuthStore();
 
@@ -33,70 +58,69 @@ const logout = () => {
 
 <style scoped>
 .default-layout {
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
 }
 
 .app-header {
-    background-color: #f8f9fa;
-    padding: 10px 20px;
-    border-bottom: 1px solid #dee2e6;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    /* background-color: #f8f9fa; Retain or use Element Plus variable */
+    border-bottom: 1px solid var(--el-border-color-light);
+    display: flex; /* Keep flex for el-row to work as expected if needed */
+    align-items: center; /* Align items vertically */
+    padding: 0 20px; /* Adjust padding as ElHeader has its own */
 }
 
 .app-header h1 {
     margin: 0;
     font-size: 1.5em;
+    color: var(--el-text-color-primary);
 }
 
-nav a {
-    font-weight: bold;
-    color: #2c3e50;
+.app-nav {
+    display: inline-flex; /* Align menu items and button nicely */
+    align-items: center;
+    border-bottom: none; /* ElMenu might add its own border */
+}
+
+.app-nav .el-menu-item {
+    padding: 0 15px; /* Adjust padding */
+}
+
+.app-nav .el-menu-item a {
     text-decoration: none;
-    margin: 0 10px;
+    color: inherit; /* Inherit color from ElMenuItem */
 }
 
-nav a.router-link-exact-active {
-    color: #42b983;
-}
+/* Element Plus handles active link styling via :router="true" and el-menu-item index */
 
-nav button {
-    background: none;
-    border: none;
-    color: #007bff;
+.user-dropdown {
+    margin-left: 20px; /* Spacing from the menu items */
+    display: flex; /* Align items nicely if needed */
+    align-items: center; /* Align items nicely */
     cursor: pointer;
-    font-size: inherit;
-    margin-left: 10px;
-    padding: 0;
 }
 
-nav button:hover {
-    text-decoration: underline;
+.el-dropdown-link {
+    color: var(--el-text-color-regular); /* Standard text color */
+    display: flex;
+    align-items: center;
 }
 
-.user-info {
-    margin-left: 15px;
-    font-size: 0.9em;
-    color: #6c757d;
+.el-dropdown-link:hover {
+    color: var(--el-color-primary); /* Highlight on hover */
 }
 
 .app-content {
-    flex: 1;
-    /* 让主内容区域填充剩余空间 / Make main content area fill remaining space */
+    /* flex: 1; ElMain should handle this */
     padding: 20px;
-    text-align: left;
-    /* 重置 App.vue 的居中对齐 / Reset center alignment from App.vue */
+    text-align: left; 
 }
 
 .app-footer {
-    background-color: #f8f9fa;
+    /* background-color: #f8f9fa; Retain or use Element Plus variable */
     padding: 10px 20px;
     text-align: center;
     font-size: 0.8em;
-    color: #6c757d;
-    border-top: 1px solid #dee2e6;
+    color: var(--el-text-color-secondary);
+    border-top: 1px solid var(--el-border-color-light);
 }
 </style>
