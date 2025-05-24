@@ -13,6 +13,8 @@ from typing import Optional, Dict # 导入 Dict / Import Dict
 # os.path.dirname(...) 获取 app 目录的上级目录 (backend)
 # os.path.dirname(...) 获取 backend 目录的上级目录 (项目根目录)
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+USER_COOKIES_BASE_DIR_NAME = "user_cookies" # Define constant for user cookies directory name
+
 
 class Settings(BaseSettings):
     """
@@ -75,6 +77,12 @@ settings = Settings()
 # English: Ensure the media root directory exists
 os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
 
+# 中文: 确保用户 Cookies 目录存在
+# English: Ensure the user cookies directory exists
+USER_COOKIES_DIR = os.path.join(PROJECT_ROOT, USER_COOKIES_BASE_DIR_NAME)
+os.makedirs(USER_COOKIES_DIR, exist_ok=True)
+
+
 if __name__ == "__main__":
     # 中文: 打印加载的配置信息 (用于测试)
     # English: Print the loaded settings information (for testing)
@@ -83,3 +91,4 @@ if __name__ == "__main__":
     print(settings.model_dump())
     print(f"Database will be stored at: {settings.DATABASE_URL.replace('sqlite+aiosqlite:///', '')}")
     print(f"Media files will be stored under: {settings.MEDIA_ROOT}")
+    print(f"User cookies will be stored under: {USER_COOKIES_DIR}")

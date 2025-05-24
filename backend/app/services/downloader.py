@@ -9,12 +9,14 @@ import re # 正则表达式库, 用于解析 gallery-dl 输出 / Regex library f
 import asyncio # 用于 subprocess
 import subprocess # 用于 gallery-dl 调用 / For gallery-dl call
 from typing import Dict, Any, Optional, Tuple, List
-from app.core.config import settings
+from app.core.config import settings, PROJECT_ROOT # Added PROJECT_ROOT
 from app.models.link import Link, LinkType
 
 # 中文: 获取日志记录器 (已在 main.py 中配置)
 # English: Get logger (configured in main.py)
 logger = logging.getLogger(__name__)
+
+USER_COOKIES_BASE_DIR_NAME = "user_cookies" # Added constant
 
 # 中文: 定义 yt-dlp 的默认选项
 # English: Define default options for yt-dlp
@@ -67,12 +69,14 @@ def get_downloader_for_link(link: Link) -> Tuple[str, Dict[str, Any] | List[str]
         # 中文: 优先使用链接特定的 Cookies, 其次使用全局设置
         # English: Prioritize link-specific cookies, then global settings
         cookie_path_to_use = None
-        if link.cookies_path and os.path.exists(link.cookies_path):
-             cookie_path_to_use = link.cookies_path
-             logger.info(f"Using link-specific cookies for link {link.id}: {cookie_path_to_use}")
-        elif link.cookies_path:
-             logger.warning(f"Link-specific cookies file specified for link {link.id} but not found at: {link.cookies_path}. Checking global settings.")
-
+        if link.cookies_path:
+            full_cookie_path = os.path.join(PROJECT_ROOT, USER_COOKIES_BASE_DIR_NAME, link.cookies_path)
+            if os.path.exists(full_cookie_path):
+                cookie_path_to_use = full_cookie_path
+                logger.info(f"Using link-specific cookies for link {link.id}: {cookie_path_to_use}")
+            else:
+                logger.warning(f"Link-specific cookies file specified for link {link.id} as '{link.cookies_path}' (resolved to: {full_cookie_path}) but not found. Checking global settings.")
+        
         if not cookie_path_to_use:
             global_cookie_path = settings.SITE_COOKIES.get(site)
             if global_cookie_path and os.path.exists(global_cookie_path):
@@ -102,11 +106,13 @@ def get_downloader_for_link(link: Link) -> Tuple[str, Dict[str, Any] | List[str]
     # 中文: 检查 yt-dlp 是否也需要 Cookies (同样优先链接特定, 其次全局)
     # English: Check if yt-dlp also needs cookies (prioritize link-specific, then global)
     cookie_path_to_use_ydl = None
-    if link.cookies_path and os.path.exists(link.cookies_path):
-        cookie_path_to_use_ydl = link.cookies_path
-        logger.info(f"Using link-specific cookies for link {link.id} (yt-dlp): {cookie_path_to_use_ydl}")
-    elif link.cookies_path:
-        logger.warning(f"Link-specific cookies file specified for link {link.id} (yt-dlp) but not found at: {link.cookies_path}. Checking global settings.")
+    if link.cookies_path:
+        full_cookie_path_ydl = os.path.join(PROJECT_ROOT, USER_COOKIES_BASE_DIR_NAME, link.cookies_path)
+        if os.path.exists(full_cookie_path_ydl):
+            cookie_path_to_use_ydl = full_cookie_path_ydl
+            logger.info(f"Using link-specific cookies for link {link.id} (yt-dlp): {cookie_path_to_use_ydl}")
+        else:
+            logger.warning(f"Link-specific cookies file specified for link {link.id} (yt-dlp) as '{link.cookies_path}' (resolved to: {full_cookie_path_ydl}) but not found. Checking global settings.")
 
     if not cookie_path_to_use_ydl:
         global_cookie_path_ydl = settings.SITE_COOKIES.get(site)

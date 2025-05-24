@@ -14,9 +14,6 @@
                     <el-input type="password" v-model="password" placeholder="请输入密码 / Enter password" show-password
                         required />
                 </el-form-item>
-                <el-form-item v-if="authStore.loginError">
-                    <el-alert type="error" :title="authStore.loginError" show-icon :closable="false" />
-                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" native-type="submit" :loading="loading" style="width: 100%;">
                         {{ loading ? '登录中... / Logging in...' : '登录 / Login' }}
