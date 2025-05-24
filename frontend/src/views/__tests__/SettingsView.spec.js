@@ -352,7 +352,18 @@ describe('SettingsView.vue', () => {
             await nextTick();
             
             // Find the remove button for "example.com"
-            const exampleComItem = wrapper.findAllComponents(ElFormItem).find(item => item.props().label?.startsWith('example.com'));
+            // const exampleComItem = wrapper.findAllComponents(ElFormItem).find(item => item.props().label?.startsWith('example.com'));
+            const exampleComItem = wrapper.findAllComponents(ElFormItem).find(item => {
+            const label = item.props().label;
+            if (typeof label !== 'string') return false;
+            try {
+            const url = new URL(label.includes('://') ? label : `https://${label}`);
+            // Check for exact match or subdomain match
+            return url.hostname === 'example.com' || url.hostname.endsWith('.example.com');
+            } catch (e) {
+            return false; // Not a valid URL
+            }
+            });
             const removeButton = exampleComItem.findComponent(ElButton); // Assuming it's the only button there
             await removeButton.trigger('click');
 
