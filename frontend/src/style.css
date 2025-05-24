@@ -1,2 +1,44 @@
-/* 清空默认样式, 可以根据需要添加自定义基础样式 */
-/* Clear default styles, add custom base styles as needed */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensure html and body take full height */
+    -webkit-font-smoothing: antialiased; /* Smoother fonts on WebKit */
+    -moz-osx-font-smoothing: grayscale; /* Smoother fonts on Firefox */
+}
+
+body {
+    font-family: var(--el-font-family); /* Use Element Plus default font family */
+    color: var(--el-text-color-primary); /* Use Element Plus default text color */
+    background-color: var(--el-bg-color); /* Use Element Plus default background color */
+    line-height: 1.5; /* Default line height */
+}
+
+/* Apply box-sizing to all elements and their pseudo-elements */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Optional: Basic link styling override if needed, though ElLink is preferred */
+/* a {
+    color: var(--el-color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--el-color-primary-light-3);
+    text-decoration: underline;
+} */
+
+/* Headings styling - Element Plus provides its own, but can be fine-tuned if needed */
+/* h1, h2, h3, h4, h5, h6 {
+    color: var(--el-text-color-primary);
+    font-weight: 600;
+} */
+
+/* Ensure root element for Vue app also takes full height */
+#app {
+    height: 100%;
+}

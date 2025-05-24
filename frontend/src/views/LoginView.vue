@@ -21,7 +21,7 @@
                 </el-form-item>
             </el-form>
             <div class="extra-links">
-                <router-link to="/password-reset-request">忘记密码? / Forgot Password?</router-link>
+                <el-link type="primary" @click="goToPasswordReset">忘记密码? / Forgot Password?</el-link>
             </div>
         </el-card>
     </div>
@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { ElCard, ElForm, ElFormItem, ElInput, ElButton, ElAlert } from 'element-plus'; // 导入 Element Plus 组件 / Import Element Plus components
+import { ElCard, ElForm, ElFormItem, ElInput, ElButton, ElAlert, ElLink } from 'element-plus'; // 导入 Element Plus 组件 / Import Element Plus components
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router'; // 导入 useRouter / Import useRouter
 import { useErrorStore } from '@/stores/error'; // Import Error Store
@@ -48,6 +48,10 @@ const handleLogin = async () => {
     // 登录成功/失败由 authStore 处理 (包括跳转) / Login success/failure handled by authStore (including redirect)
     loading.value = false;
 };
+
+const goToPasswordReset = () => {
+    router.push('/password-reset-request');
+};
 </script>
 
 <style scoped>
@@ -55,8 +59,10 @@ const handleLogin = async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 150px);
-    /* 减去 header/footer 的大致高度 / Subtract approximate header/footer height */
+    /* Assuming header and footer are each around 60px height, and main content has 20px padding top/bottom. */
+    /* var(--el-header-height) and var(--el-footer-height) are typically 60px for Element Plus. */
+    /* 40px accounts for 20px top + 20px bottom padding of el-main. */
+    min-height: calc(100vh - var(--el-header-height, 60px) - var(--el-footer-height, 60px) - 40px);
 }
 
 .login-card {
