@@ -1,10 +1,11 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "path"; // 导入 path 模块 / Import path module
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue()], // Vitest plugin is usually not needed here if using the `test` config block
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"), // 设置 '@' 指向 'src' 目录 / Set '@' to point to 'src' directory
@@ -20,8 +21,16 @@ export default defineConfig({
       "/api/v1": {
         target: "http://localhost:8000", // 后端服务器地址 / Backend server address
         changeOrigin: true, // 需要虚拟主机站点 / Needed for virtual hosted sites
-        // rewrite: (path) => path.replace(/^\/api\/v1/, '/api/v1'), // 通常不需要重写路径 / Usually no need to rewrite path
+        // rewrite: (path) => path.replace(/^\/api\/v1/, '/api\/v1'), // 通常不需要重写路径 / Usually no need to rewrite path
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.js'], // Optional: if you create a setup file
+    // deps: { // Example if using Vuetify and it needs to be inlined
+    //   inline: ['vuetify']
+    // }
   },
 });

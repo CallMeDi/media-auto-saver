@@ -110,15 +110,24 @@ async def test_user(client: httpx.AsyncClient, test_username: str, test_password
     # Here we assume a user creation API exists (needs implementation) or direct DB manipulation
     # 暂时返回空字典 / Return empty dict for now
     # TODO: Implement user creation for tests
-    # Example using API (if /users/ endpoint exists and allows creation):
-    # r = await client.post(
-    #     f"{settings.API_V1_STR}/users/",
-    #     json={"username": test_username, "password": test_password, "email": f"{test_username}@example.com"},
-    # )
-    # assert r.status_code == 201
-    # return r.json()
-    pytest.skip("User creation for tests not implemented yet") # 跳过需要此 fixture 的测试 / Skip tests needing this fixture
-    return {}
+    from app import crud, models # Import here to avoid circular dependencies at module level
+
+    async with TestSessionFactory() as session:
+        user = await crud.user.get_by_username(session, username=test_username)
+        if not user:
+            user_in_create = models.UserCreate(
+                username=test_username,
+                password=test_password,
+                email=f"{test_username}@example.com",
+                is_superuser=False,
+                is_active=True
+            )
+            user = await crud.user.create(session, obj_in=user_in_create)
+        # Ensure the returned object is suitable for attribute access (e.g., user.username)
+        # If crud.user.create returns a Pydantic model, it's fine.
+        # If it's a dict, ensure keys match expected access patterns.
+        # For consistency and to ensure it's a User model instance:
+        return await crud.user.get_by_username(session, username=test_username)
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -149,13 +158,14 @@ async def normal_user_token_headers(client: httpx.AsyncClient, test_user: Dict[s
     """
     # login_data = {
     #     "username": test_user["username"],
-    #     "password": test_password,
-    # }
-    # r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
-    # r.raise_for_status()
-    # tokens = r.json()
-    # a_token = tokens["access_token"]
-    # headers = {"Authorization": f"Bearer {a_token}"}
-    # return headers
-    pytest.skip("Depends on test_user fixture which is not implemented")
-    return {}
+    login_data = {
+        "username": test_user.username, # Get username from the test_user object
+        "password": test_password,
+    }
+    headers = {"Content-Type": "application/x-www-form-urlencoded"} # Ensure correct content type
+    r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data, headers=headers)
+    r.raise_for_status() # Ensure login is successful (e.g. status 200)
+    tokens = r.json()
+    a_token = tokens["access_token"]
+    auth_headers = {"Authorization": f"Bearer {a_token}"}
+    return auth_headers
