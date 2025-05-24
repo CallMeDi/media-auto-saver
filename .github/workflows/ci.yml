@@ -1,0 +1,78 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop # Assuming develop branch might exist, if not, it won't trigger for it
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  backend-ci:
+    name: Backend CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.3' # From .python-version file
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install -r backend/requirements-dev.txt
+          pip install flake8 # Flake8 was not in requirements-dev.txt
+
+      - name: Lint with Flake8
+        run: |
+          flake8 backend/app
+
+      - name: Run backend tests with coverage
+        run: |
+          pytest backend/
+
+      # TODO: Upload backend coverage report
+      # - name: Upload backend coverage report
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: backend-coverage-report
+      #     path: backend/htmlcov/ # Or backend/coverage.xml if that's preferred
+
+  frontend-ci:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x' # Defaulting to Node.js 20.x as not specified elsewhere
+
+      - name: Install frontend dependencies
+        run: |
+          npm ci --prefix frontend
+
+      # - name: Lint frontend code
+      #   run: |
+      #     # npm run lint --prefix frontend # No lint script found in package.json
+      #     echo "Frontend linting step skipped as no lint script is defined."
+
+      - name: Run frontend tests with coverage
+        run: |
+          npm test --prefix frontend # This should execute 'vitest run'
+
+      # TODO: Upload frontend coverage report
+      # - name: Upload frontend coverage report
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: frontend-coverage-report
+      #     path: frontend/coverage/ # Default directory for Vitest coverage reports

@@ -1,4 +1,5 @@
 pytest
+pytest-cov
 httpx
 pytest-asyncio # 支持异步测试函数 / Support for async test functions
 respx # 用于模拟 HTTP 请求 (可选, 但推荐用于测试外部调用) / For mocking HTTP requests (optional, but recommended for testing external calls)
