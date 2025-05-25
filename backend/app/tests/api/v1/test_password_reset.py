@@ -12,7 +12,7 @@ from app.core.config import settings
 from app.core import security
 
 # Assuming PasswordResetToken is in app.models
-from app.models import User, UserCreate, PasswordResetToken
+from app.models import User, PasswordResetToken  # UserCreate removed
 from app.crud import user as crud_user
 
 # Assuming this exists
@@ -121,7 +121,7 @@ async def test_reset_password_success(
     new_password = "newPassword456"
 
     async with TestSessionFactory() as session:
-        _ = await create_test_user_for_password_reset( # user var unused
+        _ = await create_test_user_for_password_reset(  # user var unused
             session, test_username, test_email, original_password
         )
 
@@ -191,7 +191,7 @@ async def test_reset_password_expired_token(
     new_password = "newPasswordForExpired"
 
     async with TestSessionFactory() as session:
-        _ = await create_test_user_for_password_reset( # user var unused
+        _ = await create_test_user_for_password_reset(  # user var unused
             session, test_username, test_email, password
         )
 
@@ -236,7 +236,7 @@ async def test_reset_password_used_token(
     new_password2 = "newPasswordUsed2"
 
     async with TestSessionFactory() as session:
-        _ = await create_test_user_for_password_reset( # user var unused
+        _ = await create_test_user_for_password_reset(  # user var unused
             session, test_username, test_email, original_password
         )
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # /usr/bin/env python3
 
-from sqlmodel import SQLModel # create_engine, Session are unused
+from sqlmodel import SQLModel  # create_engine, Session are unused
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 # from sqlalchemy.orm import sessionmaker # unused
 from app.core.config import settings

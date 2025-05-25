@@ -5,9 +5,9 @@ import pytest
 import os
 from unittest import mock
 from pathlib import Path
-from typing import Optional, Any, Dict # Added Dict back, was F821 before
-from datetime import datetime, timezone # timedelta removed
-import asyncio # Added for asyncio.sleep
+from typing import Optional, Any, Dict  # Added Dict back, was F821 before
+# timedelta removed, datetime, timezone removed
+import asyncio  # Added for asyncio.sleep
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -138,23 +138,23 @@ def test_validate_and_normalize_cookies_path(
         "os.path.exists", return_value=mock_os_path_config.get("exists", False)
     ) as mock_exists, mock.patch(
         "os.path.isfile", return_value=mock_os_path_config.get("isfile", False)
-    ) as mock_isfile, mock.patch(
+    ), mock.patch(
         "os.path.isabs", return_value=mock_os_path_config.get("isabs", False)
-    ) as mock_isabs, mock.patch(
+    ), mock.patch(
         "os.path.normpath",
         side_effect=lambda p: (
             os.path.normpath(p)
             if not mock_os_path_config.get("normpath_traversal")
             else "../" + p
         ),
-    ) as mock_normpath, mock.patch(
+    ), mock.patch(
         "os.path.commonpath",
         side_effect=lambda paths: (
             crud_link_module.PROJECT_ROOT
             if mock_os_path_config.get("commonpath_match")
             else "other_path"
         ),
-    ) as mock_commonpath:
+    ):
 
         # Configure side effect for os.path.exists based on actual path for
         # more dynamic mock

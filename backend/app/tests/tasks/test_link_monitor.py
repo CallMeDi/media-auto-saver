@@ -473,7 +473,7 @@ async def test_trigger_monitoring_job_multiple_links(
     link1 = mock_link_instance_creator(id=1, url="url1")
     link2 = mock_link_instance_creator(id=2, url="url2", status=LinkStatus.IDLE)
     # Link3 is enabled but in a state that should be skipped by the query
-    _ = mock_link_instance_creator(id=3, url="url3", status=LinkStatus.DOWNLOADING) # F841, assigned but not used
+    mock_link_instance_creator(id=3, url="url3", status=LinkStatus.DOWNLOADING)  # F841, assigned but not used
 
     # The query in trigger_monitoring_job filters for is_enabled=True and status not in DOWNLOADING, RECORDING, MONITORING
     # So, link1 and link2 should be processed if they are "enabled" and "idle".

@@ -3,7 +3,7 @@
 
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, Any, Dict # List, Type, TypeVar, Generic removed
+from typing import Optional, Any, Dict  # List, Type, TypeVar, Generic removed
 
 from app.models.user import User, UserCreate, UserUpdate
 from app.core.security import get_password_hash, verify_password

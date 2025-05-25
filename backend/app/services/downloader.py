@@ -8,7 +8,7 @@ import logging
 import re  # 正则表达式库, 用于解析 gallery-dl 输出 / Regex library for parsing gallery-dl output
 import asyncio  # 用于 subprocess
 import subprocess  # 用于 gallery-dl 调用 / For gallery-dl call
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Dict, Any, Tuple, List  # Optional removed
 from app.core.config import settings, PROJECT_ROOT  # Added PROJECT_ROOT
 from app.models.link import Link, LinkType
 

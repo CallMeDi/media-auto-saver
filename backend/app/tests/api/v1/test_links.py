@@ -2,7 +2,7 @@
 # /usr/bin/env python3
 
 import pytest
-from typing import Dict, List
+from typing import Dict
 import httpx
 from sqlmodel import select
 # from sqlalchemy.ext.asyncio import AsyncSession # Not used
@@ -10,7 +10,7 @@ from sqlmodel import select
 from app.core.config import settings
 
 # 导入相关模型 / Import related models
-from app.models import Link, LinkType, LinkStatus # LinkRead removed
+from app.models import Link, LinkType  # LinkRead removed, LinkStatus removed
 
 # 导入测试数据库会话工厂 / Import test DB session factory
 from app.tests.conftest import TestSessionFactory

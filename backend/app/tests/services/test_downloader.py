@@ -6,7 +6,7 @@ import pytest
 import os
 from unittest import mock
 from pathlib import Path
-from typing import Dict, Any # List, Optional, Tuple removed
+from typing import Dict, Any, Optional  # List, Tuple removed, Optional added
 
 from app.models.link import Link, LinkType
 from app.services import downloader as downloader_service  # The module to test

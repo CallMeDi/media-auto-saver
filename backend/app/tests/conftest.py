@@ -3,7 +3,7 @@
 
 import pytest
 import pytest_asyncio
-from typing import AsyncGenerator, Dict, Any # Generator removed
+from typing import AsyncGenerator, Dict, Any  # Generator removed
 
 import httpx
 # from fastapi import FastAPI # Unused
