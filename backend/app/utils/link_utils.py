@@ -5,10 +5,11 @@ from urllib.parse import urlparse
 from typing import Optional
 
 # 中文: 定义一些已知网站的域名映射, 用于更精确地识别网站名称
-# English: Define domain mappings for some known websites for more accurate site name identification
+# English: Define domain mappings for some known websites for more
+# accurate site name identification
 KNOWN_SITES = {
     "twitter.com": "Twitter",
-    "x.com": "Twitter", # 推特的新域名 / Twitter's new domain
+    "x.com": "Twitter",  # 推特的新域名 / Twitter's new domain
     "youtube.com": "YouTube",
     "youtu.be": "YouTube",
     "bilibili.com": "Bilibili",
@@ -17,7 +18,7 @@ KNOWN_SITES = {
     "pixiv.net": "Pixiv",
     "instagram.com": "Instagram",
     "douyin.com": "Douyin",
-    "tiktok.com": "TikTok", # 国际版抖音 / International version of Douyin
+    "tiktok.com": "TikTok",  # 国际版抖音 / International version of Douyin
     "kuaishou.com": "Kuaishou",
     "live.kuaishou.com": "Kuaishou",
     "xiaohongshu.com": "Xiaohongshu",
@@ -28,6 +29,7 @@ KNOWN_SITES = {
     "vimeo.com": "Vimeo",
     # 可以根据需要添加更多网站 / Add more sites as needed
 }
+
 
 def extract_site_name(url: str) -> Optional[str]:
     """
@@ -46,15 +48,16 @@ def extract_site_name(url: str) -> Optional[str]:
     """
     try:
         parsed_url = urlparse(url)
-        netloc = parsed_url.netloc.lower() # 获取域名部分并转小写 / Get the domain part and convert to lowercase
+        # 获取域名部分并转小写 / Get the domain part and convert to lowercase
+        netloc = parsed_url.netloc.lower()
 
         if not netloc:
             return None
 
         # 中文: 移除端口号 (如果存在)
         # English: Remove port number (if exists)
-        if ':' in netloc:
-            netloc = netloc.split(':')[0]
+        if ":" in netloc:
+            netloc = netloc.split(":")[0]
 
         # 中文: 优先匹配已知站点
         # English: Prioritize matching known sites
@@ -64,36 +67,39 @@ def extract_site_name(url: str) -> Optional[str]:
 
         # 中文: 如果不在已知站点中, 尝试提取主域名部分
         # English: If not in known sites, try to extract the main domain part
-        parts = netloc.split('.')
+        parts = netloc.split(".")
         if len(parts) >= 2:
             # 中文: 移除常见的 www. 前缀
             # English: Remove common www. prefix
-            if parts[0] == 'www':
+            if parts[0] == "www":
                 parts = parts[1:]
 
             # 中文: 处理类似 .co.uk 的情况, 取倒数第二个部分
             # English: Handle cases like .co.uk, take the second to last part
             if len(parts) >= 2 and len(parts[-1]) <= 3 and len(parts[-2]) <= 3:
-                 # 假设是 .co.uk, .org.cn 等 / Assume .co.uk, .org.cn etc.
-                 if len(parts) >= 3:
-                     return parts[-3].capitalize()
-                 else: # 无法确定主域名 / Cannot determine main domain
-                     return parts[0].capitalize() # 返回第一部分 / Return the first part
+                # 假设是 .co.uk, .org.cn 等 / Assume .co.uk, .org.cn etc.
+                if len(parts) >= 3:
+                    return parts[-3].capitalize()
+                else:  # 无法确定主域名 / Cannot determine main domain
+                    # 返回第一部分 / Return the first part
+                    return parts[0].capitalize()
             else:
                 # 中文: 取倒数第二个部分作为网站名 (例如 google.com -> Google)
-                # English: Take the second to last part as the site name (e.g., google.com -> Google)
+                # English: Take the second to last part as the site name (e.g.,
+                # google.com -> Google)
                 return parts[-2].capitalize()
         elif len(parts) == 1:
-             # 中文: 可能是 localhost 或类似情况
-             # English: Might be localhost or similar cases
-             return parts[0]
+            # 中文: 可能是 localhost 或类似情况
+            # English: Might be localhost or similar cases
+            return parts[0]
         else:
-            return None # 无法解析 / Cannot parse
+            return None  # 无法解析 / Cannot parse
 
     except Exception:
         # 中文: 解析 URL 时发生任何错误, 都返回 None
         # English: Return None if any error occurs during URL parsing
         return None
+
 
 if __name__ == "__main__":
     # 中文: 测试函数
@@ -123,7 +129,7 @@ if __name__ == "__main__":
         "http://localhost:8080/api",
         "invalid-url",
         "ftp://ftp.example.com/file",
-        "https://sub.domain.longname.com/path"
+        "https://sub.domain.longname.com/path",
     ]
     for url in test_urls:
         print(f"{url} -> {extract_site_name(url)}")

@@ -17,6 +17,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # English: JWT Algorithm
 ALGORITHM = "HS256"
 
+
 def create_access_token(
     subject: Union[str, Any], expires_delta: Optional[timedelta] = None
 ) -> str:
@@ -45,6 +46,7 @@ def create_access_token(
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     中文: 验证明文密码与哈希密码是否匹配。
@@ -52,12 +54,14 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password: str) -> str:
     """
     中文: 获取密码的哈希值。
     English: Get the hash of a password.
     """
     return pwd_context.hash(password)
+
 
 def decode_token(token: str) -> Optional[str]:
     """
@@ -69,7 +73,7 @@ def decode_token(token: str) -> Optional[str]:
     """
     try:
         if not settings.SECRET_KEY:
-             raise ValueError("SECRET_KEY not configured in settings")
+            raise ValueError("SECRET_KEY not configured in settings")
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
         subject = payload.get("sub")
         if subject is None:

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # /usr/bin/env python3
 
-from typing import Generator, Optional, Any
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
-from jose import jwt, JWTError
+from jose import JWTError
 
 from app import crud, models, schemas
 from app.core import security
@@ -14,10 +13,12 @@ from app.core.config import settings
 from app.db.session import get_async_session
 
 # 中文: 定义 OAuth2 密码 Bearer 模式, 指定获取令牌的 URL (稍后创建)
-# English: Define OAuth2 password Bearer scheme, specifying the token URL (to be created later)
+# English: Define OAuth2 password Bearer scheme, specifying the token URL
+# (to be created later)
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
+
 
 async def get_current_user(
     db: AsyncSession = Depends(get_async_session), token: str = Depends(reusable_oauth2)
@@ -48,14 +49,15 @@ async def get_current_user(
     try:
         user_id = int(token_data.sub)
     except (ValueError, TypeError):
-         # 如果 sub 不是有效的整数 ID, 抛出异常
-         # If sub is not a valid integer ID, raise exception
-         raise credentials_exception
+        # 如果 sub 不是有效的整数 ID, 抛出异常
+        # If sub is not a valid integer ID, raise exception
+        raise credentials_exception
 
     user = await crud.user.get(db, id=user_id)
     if not user:
         raise credentials_exception
     return user
+
 
 async def get_current_active_user(
     current_user: models.User = Depends(get_current_user),
@@ -67,6 +69,7 @@ async def get_current_active_user(
     if not crud.user.is_active(current_user):
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
 
 async def get_current_active_superuser(
     current_user: models.User = Depends(get_current_active_user),
