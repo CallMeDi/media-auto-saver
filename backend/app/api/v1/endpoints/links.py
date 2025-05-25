@@ -73,7 +73,10 @@ async def read_links(
     ),
     status: Optional[LinkStatus] = Query(
         None,
-        description="按状态过滤 (IDLE, MONITORING, DOWNLOADING, RECORDING, ERROR) / Filter by status (IDLE, MONITORING, DOWNLOADING, RECORDING, ERROR)",
+        description=(
+            "按状态过滤 (IDLE, MONITORING, DOWNLOADING, RECORDING, ERROR) / "
+            "Filter by status (IDLE, MONITORING, DOWNLOADING, RECORDING, ERROR)"
+        ),
     ),
     is_enabled: Optional[bool] = Query(
         None, description="按是否启用过滤 / Filter by enabled status"

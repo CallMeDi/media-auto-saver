@@ -84,7 +84,9 @@ async def lifespan(app: FastAPI):
                 )
                 logger.info(f"Initial superuser username: '{initial_username}'")
 
-            logger.info(f"Creating initial superuser '{initial_username}'...")
+            logger.info(
+                f"Creating initial superuser '{initial_username}'..."
+            )
             user_in = models.UserCreate(
                 username=initial_username,
                 password=initial_password,

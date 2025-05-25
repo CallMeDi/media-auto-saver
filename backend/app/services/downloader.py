@@ -107,7 +107,8 @@ def get_downloader_for_link(link: Link) -> Tuple[str, Dict[str, Any] | List[str]
                 )
             else:
                 logger.warning(
-                    f"Link-specific cookies file specified for link {link.id} as '{link.cookies_path}' (resolved to: {full_cookie_path}) but not found. Checking global settings."
+                    f"Link-specific cookies file specified for link {link.id} as '{link.cookies_path}' "
+                    f"(resolved to: {full_cookie_path}) but not found. Checking global settings."
                 )
 
         if not cookie_path_to_use:
@@ -161,7 +162,8 @@ def get_downloader_for_link(link: Link) -> Tuple[str, Dict[str, Any] | List[str]
             )
         else:
             logger.warning(
-                f"Link-specific cookies file specified for link {link.id} (yt-dlp) as '{link.cookies_path}' (resolved to: {full_cookie_path_ydl}) but not found. Checking global settings."
+                f"Link-specific cookies file specified for link {link.id} (yt-dlp) as '{link.cookies_path}' "
+                f"(resolved to: {full_cookie_path_ydl}) but not found. Checking global settings."
             )
 
     if not cookie_path_to_use_ydl:
@@ -287,13 +289,15 @@ async def download_media(link: Link) -> Dict[str, Any]:
                             set(downloaded_files_list)
                         )  # Deduplicate
                         logger.info(
-                            f"yt-dlp download finished for {link.url}. Status: success, Files: {len(result['downloaded_files'])}"
+                            f"yt-dlp download finished for {link.url}. Status: success, "
+                            f"Files: {len(result['downloaded_files'])}"
                         )
                     else:
                         # If no files were detected, it might be a real failure or no media was found.
                         # yt-dlp logs will have more details.
                         result["error"] = (
-                            "yt-dlp finished, but no files were detected by the hook. Check logs for details."
+                            "yt-dlp finished, but no files were detected by the hook. "
+                            "Check logs for details."
                         )
                         result["status"] = "error"
                         logger.warning(
@@ -313,7 +317,8 @@ async def download_media(link: Link) -> Dict[str, Any]:
                 if downloaded_files_list:
                     result["downloaded_files"] = list(set(downloaded_files_list))
                     logger.info(
-                        f"yt-dlp download finished with error for {link.url}, but some files were detected: {len(result['downloaded_files'])}"
+                        f"yt-dlp download finished with error for {link.url}, but some files were detected: "
+                        f"{len(result['downloaded_files'])}"
                     )
                 else:
                     logger.error(
@@ -414,7 +419,8 @@ async def download_media(link: Link) -> Dict[str, Any]:
                 result["status"] = "error"
 
             logger.info(
-                f"gallery-dl download finished for {link.url}. Status: {result['status']}, Files: {len(result.get('downloaded_files', []))}"
+                f"gallery-dl download finished for {link.url}. Status: {result['status']}, "
+                f"Files: {len(result.get('downloaded_files', []))}"
             )
 
         else:

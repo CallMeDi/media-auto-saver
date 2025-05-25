@@ -378,7 +378,7 @@ async def test_crudbase_remove(db: AsyncSession, create_test_link: Link):
 
 
 # Note on CRUDBase methods not explicitly tested here:
-# - The `CRUDBase.update` method's behavior with a Pydantic schema as `obj_in` (as opposed to a dict)
+# - The `CRUDBase.update` method's behavior with a Pydantic schema as `obj_in` (as opposed to a dict)  # noqa: E501
 #   is not directly tested for HistoryLog because `CRUDHistoryLog` defines `UpdateSchemaType` as `BaseModel` (placeholder).
 #   If a `HistoryLogUpdate(BaseModel)` schema were defined and used, that path could be tested.
 #   However, the current usage with a dict covers the core update logic.

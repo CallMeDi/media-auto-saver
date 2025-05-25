@@ -63,7 +63,11 @@ def mock_media_root(tmp_path: Path, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "site_name, link_type, link_cookies_path, global_site_cookies, expected_downloader, expected_cookie_in_opts, link_cookie_exists, global_cookie_exists",
+    (
+        "site_name, link_type, link_cookies_path, global_site_cookies, "
+        "expected_downloader, expected_cookie_in_opts, link_cookie_exists, "
+        "global_cookie_exists"
+    ),
     [
         # yt-dlp cases
         ("YouTube", LinkType.CREATOR, None, {}, "yt-dlp", None, False, False),

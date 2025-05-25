@@ -188,7 +188,8 @@ class CRUDLink(CRUDBase[Link, LinkCreate, LinkUpdate]):
 
         if not os.path.exists(full_path_to_check):
             raise ValueError(
-                f"Specified cookies file does not exist at resolved path: {normalized_filename} (expected under {USER_COOKIES_BASE_DIR_NAME})"
+                f"Specified cookies file does not exist at resolved path: {normalized_filename} "
+                f"(expected under {USER_COOKIES_BASE_DIR_NAME})"
             )
 
         if not os.path.isfile(full_path_to_check):
@@ -298,7 +299,8 @@ class CRUDLink(CRUDBase[Link, LinkCreate, LinkUpdate]):
             db_obj: 要更新的链接对象 / The link object to update.
             status: 新的状态 / The new status.
             error_message: 错误信息 (仅在 status 为 ERROR 时设置) / Error message (only set if status is ERROR).
-            is_success: 操作是否成功完成 (用于更新 last_success_at) / Whether the operation completed successfully (for updating last_success_at).
+            is_success: 操作是否成功完成 (用于更新 last_success_at) / Whether the operation completed successfully 
+                        (for updating last_success_at).
         """
         update_data = {
             "status": status,

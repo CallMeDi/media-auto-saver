@@ -41,7 +41,8 @@ class SiteCookiesUpdate(BaseModel):
             )
             if not os.path.exists(full_path) or not os.path.isfile(full_path):
                 raise ValueError(
-                    f"Cookies file path does not exist or is not a file for site '{site}': {path} (resolved to: {full_path})"
+                    f"Cookies file path does not exist or is not a file for site '{site}': "
+                    f"{path} (resolved to: {full_path})"
                 )
         return v
 
@@ -78,7 +79,8 @@ async def update_global_site_cookies(
     警告: 这个实现直接修改内存中的 settings 对象, 并且不会持久化!
           重启应用后会丢失更改。需要更复杂的持久化机制 (例如写入 .env 或数据库)。
     Warning: This implementation directly modifies the in-memory settings object and is NOT persistent!
-             Changes will be lost on application restart. Needs a more complex persistence mechanism (e.g., writing to .env or DB).
+             Changes will be lost on application restart. Needs a more complex persistence mechanism 
+             (e.g., writing to .env or DB).
     """
     logger.warning(
         "Updating global site cookies in memory. This change is NOT persistent and will be lost on restart!"
@@ -104,7 +106,8 @@ async def update_global_site_cookies(
         # without needing a restart for the *current* process.
         settings.SITE_COOKIES = cookies_in.site_cookies
         logger.info(
-            f"Global site cookies updated and persisted to {env_path} by user '{current_user.username}'. New config: {settings.SITE_COOKIES}"
+            f"Global site cookies updated and persisted to {env_path} by user "
+            f"'{current_user.username}'. New config: {settings.SITE_COOKIES}"
         )
         return {"message": "Global site cookies updated and saved successfully."}
     except Exception as e:
