@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Python virtual environment
+venv/
+.venv/
+
+# Python bytecode and caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+htmlcov/
+.coverage
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.swp
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Local environment file
+.env
+
+# Database file (managed by volume)
+database.db
+database.db-journal
+
+# Log files
+*.log

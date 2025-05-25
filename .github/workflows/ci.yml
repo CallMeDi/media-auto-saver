@@ -1,0 +1,113 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop # Assuming develop branch might exist, if not, it won't trigger for it
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  backend-ci:
+    name: Backend CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.3' # From .python-version file
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install -r backend/requirements-dev.txt
+
+      - name: Lint with Flake8
+        run: |
+          flake8 backend/app
+
+      - name: Run backend tests with coverage
+        run: |
+          pytest --cov=backend/app --cov-report=xml:backend/coverage.xml --cov-report=html:backend/htmlcov backend/
+
+      - name: Upload backend coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-report-xml
+          path: backend/coverage.xml
+      - name: Upload backend coverage report HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-report-html
+          path: backend/htmlcov/
+
+  frontend-ci:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x' # Defaulting to Node.js 20.x as not specified elsewhere
+
+      - name: Install frontend dependencies
+        run: |
+          npm ci --prefix frontend
+          npm install --save-dev eslint eslint-plugin-vue --prefix frontend
+
+      - name: Lint frontend code
+        run: |
+          npm run lint --prefix frontend
+
+      - name: Run frontend tests with coverage
+        run: |
+          npm run test -- --coverage --prefix frontend
+
+      - name: Upload frontend coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/ # Default directory for Vitest coverage reports
+
+  docker-builds:
+    name: Docker Image Builds
+    runs-on: ubuntu-latest
+    needs: [backend-ci, frontend-ci]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          dockerfile: ./backend/Dockerfile
+          tags: |
+            media-auto-saver-backend:${{ github.sha }}
+            media-auto-saver-backend:latest
+          push: false
+          load: true
+
+      - name: Build frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          dockerfile: ./frontend/Dockerfile
+          tags: |
+            media-auto-saver-frontend:${{ github.sha }}
+            media-auto-saver-frontend:latest
+          push: false
+          load: true

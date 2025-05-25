@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # /usr/bin/env python3
 
-from sqlmodel import select, Session, SQLModel
+from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional, Type, TypeVar, Generic, Any, Dict
+from typing import Optional, Any, Dict  # List, Type, TypeVar, Generic removed
 
 from app.models.user import User, UserCreate, UserUpdate
 from app.core.security import get_password_hash, verify_password
-from .crud_link import CRUDBase # 导入通用的 CRUDBase / Import the generic CRUDBase
+from .crud_link import CRUDBase  # 导入通用的 CRUDBase / Import the generic CRUDBase
+
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     """
@@ -15,7 +16,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     English: Specific CRUD operations for the User model.
     """
 
-    async def get_by_username(self, db: AsyncSession, *, username: str) -> Optional[User]:
+    async def get_by_username(
+        self, db: AsyncSession, *, username: str
+    ) -> Optional[User]:
         """
         中文: 通过用户名获取用户。
         English: Get a user by username.
@@ -39,7 +42,8 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         English: Create a new user, password will be hashed.
         """
         # 中文: 使用 Pydantic 模型的 model_dump 方法将输入数据转换为字典, 排除密码
-        # English: Use Pydantic model's model_dump method to convert input data to a dictionary, excluding password
+        # English: Use Pydantic model's model_dump method to convert input data
+        # to a dictionary, excluding password
         obj_in_data = obj_in.model_dump(exclude={"password"})
         hashed_password = get_password_hash(obj_in.password)
         db_obj = User(**obj_in_data, hashed_password=hashed_password)
@@ -49,11 +53,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return db_obj
 
     async def update(
-        self,
-        db: AsyncSession,
-        *,
-        db_obj: User,
-        obj_in: UserUpdate | Dict[str, Any]
+        self, db: AsyncSession, *, db_obj: User, obj_in: UserUpdate | Dict[str, Any]
     ) -> User:
         """
         中文: 更新用户信息, 如果提供了新密码, 会进行哈希处理。
@@ -65,11 +65,14 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             update_data = obj_in.model_dump(exclude_unset=True)
 
         # 中文: 如果更新数据中包含密码, 则哈希新密码
-        # English: If the update data includes a password, hash the new password
+        # English: If the update data includes a password, hash the new
+        # password
         if "password" in update_data and update_data["password"]:
             hashed_password = get_password_hash(update_data["password"])
-            del update_data["password"] # 从更新数据中移除明文密码 / Remove plain password from update data
-            update_data["hashed_password"] = hashed_password # 添加哈希后的密码 / Add hashed password
+            # 从更新数据中移除明文密码 / Remove plain password from update data
+            del update_data["password"]
+            # 添加哈希后的密码 / Add hashed password
+            update_data["hashed_password"] = hashed_password
 
         # 中文: 调用基类的 update 方法处理其他字段
         # English: Call the base class's update method to handle other fields
@@ -102,6 +105,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         English: Check if the user is a superuser.
         """
         return user.is_superuser
+
 
 # 中文: 创建 User CRUD 操作的实例
 # English: Create an instance of the User CRUD operations

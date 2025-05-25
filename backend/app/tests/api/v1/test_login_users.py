@@ -6,7 +6,10 @@ from typing import Dict
 import httpx
 
 from app.core.config import settings
-from app.models import UserRead # 导入 UserRead 用于验证响应 / Import UserRead for response validation
+
+# 导入 UserRead 用于验证响应 / Import UserRead for response validation
+from app.models import UserRead
+
 
 @pytest.mark.asyncio
 async def test_login_access_token(client: httpx.AsyncClient) -> None:
@@ -16,13 +19,14 @@ async def test_login_access_token(client: httpx.AsyncClient) -> None:
     """
     login_data = {
         "username": "admin",
-        "password": "changeme", # 使用默认密码 / Use default password
+        "password": "changeme",  # 使用默认密码 / Use default password
     }
     r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
     assert r.status_code == 200
     tokens = r.json()
     assert "access_token" in tokens
     assert tokens["token_type"] == "bearer"
+
 
 @pytest.mark.asyncio
 async def test_login_access_token_wrong_password(client: httpx.AsyncClient) -> None:
@@ -38,6 +42,7 @@ async def test_login_access_token_wrong_password(client: httpx.AsyncClient) -> N
     assert r.status_code == 400
     assert r.json()["detail"] == "Incorrect username or password"
 
+
 @pytest.mark.asyncio
 async def test_login_access_token_wrong_username(client: httpx.AsyncClient) -> None:
     """
@@ -46,12 +51,15 @@ async def test_login_access_token_wrong_username(client: httpx.AsyncClient) -> N
     """
     login_data = {
         "username": "wronguser",
-            "password": "changeme",
+        "password": "changeme",
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data, headers=headers)
+    r = await client.post(
+        f"{settings.API_V1_STR}/login/access-token", data=login_data, headers=headers
+    )
     assert r.status_code == 400
     assert r.json()["detail"] == "Incorrect username or password"
+
 
 @pytest.mark.asyncio
 async def test_get_current_user(
@@ -61,7 +69,9 @@ async def test_get_current_user(
     中文: 测试使用有效令牌获取当前用户信息。
     English: Test getting current user info with a valid token.
     """
-    r = await client.get(f"{settings.API_V1_STR}/users/me", headers=superuser_token_headers)
+    r = await client.get(
+        f"{settings.API_V1_STR}/users/me", headers=superuser_token_headers
+    )
     assert r.status_code == 200
     current_user = r.json()
     # 验证返回的数据结构符合 UserRead 模型 / Validate response against UserRead model
@@ -69,6 +79,7 @@ async def test_get_current_user(
     assert current_user["username"] == "admin"
     assert current_user["is_active"] is True
     assert current_user["is_superuser"] is True
+
 
 @pytest.mark.asyncio
 async def test_get_current_user_no_token(client: httpx.AsyncClient) -> None:
@@ -79,6 +90,7 @@ async def test_get_current_user_no_token(client: httpx.AsyncClient) -> None:
     r = await client.get(f"{settings.API_V1_STR}/users/me")
     assert r.status_code == 401
     assert r.json()["detail"] == "Not authenticated"
+
 
 @pytest.mark.asyncio
 async def test_get_current_user_invalid_token(client: httpx.AsyncClient) -> None:

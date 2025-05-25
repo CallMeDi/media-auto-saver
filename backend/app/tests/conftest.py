@@ -3,10 +3,10 @@
 
 import pytest
 import pytest_asyncio
-from typing import AsyncGenerator, Generator, Dict, Any
+from typing import AsyncGenerator, Dict, Any  # Generator removed
 
 import httpx
-from fastapi import FastAPI
+# from fastapi import FastAPI # Unused
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
@@ -17,7 +17,9 @@ from sqlmodel import SQLModel
 # Note: Import paths assume pytest is run from the backend directory
 from app.main import app
 from app.core.config import settings
-from app.db.session import get_async_session # 导入原始的 session 依赖 / Import original session dependency
+
+# 导入原始的 session 依赖 / Import original session dependency
+from app.db.session import get_async_session
 
 # --- 测试数据库设置 / Test Database Setup ---
 # 中文: 使用内存中的 SQLite 数据库进行测试, 避免影响主数据库
@@ -26,8 +28,16 @@ from app.db.session import get_async_session # 导入原始的 session 依赖 / 
 # Note: In-memory database is cleared after each test run
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
-test_engine = create_async_engine(TEST_DATABASE_URL, echo=False, future=True, connect_args={"check_same_thread": False})
-TestSessionFactory = sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+test_engine = create_async_engine(
+    TEST_DATABASE_URL,
+    echo=False,
+    future=True,
+    connect_args={"check_same_thread": False},
+)
+TestSessionFactory = sessionmaker(
+    test_engine, class_=AsyncSession, expire_on_commit=False
+)
+
 
 async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
     """
@@ -36,6 +46,7 @@ async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
     """
     async with TestSessionFactory() as session:
         yield session
+
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
 async def setup_test_db() -> AsyncGenerator[None, None]:
@@ -50,10 +61,11 @@ async def setup_test_db() -> AsyncGenerator[None, None]:
     # 中文: 在测试数据库中创建初始用户
     # English: Create initial user in the test database
     async with TestSessionFactory() as session:
-        from app import crud, models # 导入 CRUD 和模型 / Import CRUD and models
+        from app import crud, models  # 导入 CRUD 和模型 / Import CRUD and models
+
         initial_username = "admin"
         initial_password = "changeme"
-        initial_email = "admin@test.com" # 使用测试邮箱 / Use test email
+        initial_email = "admin@test.com"  # 使用测试邮箱 / Use test email
 
         user = await crud.user.get_by_username(session, username=initial_username)
         if not user:
@@ -62,42 +74,59 @@ async def setup_test_db() -> AsyncGenerator[None, None]:
                 password=initial_password,
                 email=initial_email,
                 is_superuser=True,
-                is_active=True
+                is_active=True,
             )
             await crud.user.create(session, obj_in=user_in)
-            print(f"\nINFO: Created initial superuser '{initial_username}' in test database.") # 打印信息以便确认 / Print info for confirmation
+            # 打印信息以便确认 / Print info for confirmation
+            print(
+                f"\nINFO: Created initial superuser '{initial_username}' in test database."
+            )
         else:
-            print(f"\nINFO: Initial superuser '{initial_username}' already exists in test database.")
-
+            print(
+                f"\nINFO: Initial superuser '{initial_username}' already exists in test database."
+            )
 
     yield
     # 测试结束后不需要显式删除内存数据库 / No need to explicitly drop in-memory DB after tests
+
 
 # --- 覆盖应用依赖 / Override App Dependencies ---
 app.dependency_overrides[get_async_session] = override_get_async_session
 
 # --- 测试客户端 Fixture / Test Client Fixture ---
+
+
 @pytest_asyncio.fixture(scope="session")
 async def client() -> AsyncGenerator[httpx.AsyncClient, None]:
     """
     中文: 提供一个用于发送 API 请求的异步 HTTP 客户端。
     English: Provide an async HTTP client for sending API requests.
     """
-    # 使用 ASGI transport 直接与 FastAPI 应用交互 / Use ASGI transport to interact directly with the FastAPI app
-    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://testserver") as c:
+    # 使用 ASGI transport 直接与 FastAPI 应用交互 / Use ASGI transport to interact
+    # directly with the FastAPI app
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url="http://testserver"
+    ) as c:
         yield c
 
+
 # --- 认证辅助 Fixtures / Authentication Helper Fixtures ---
+
+
 @pytest.fixture(scope="module")
 def test_username() -> str:
     return "testuser"
+
 
 @pytest.fixture(scope="module")
 def test_password() -> str:
     return "testpassword"
 
+
 @pytest_asyncio.fixture(scope="module")
-async def test_user(client: httpx.AsyncClient, test_username: str, test_password: str) -> Dict[str, Any]:
+async def test_user(
+    client: httpx.AsyncClient, test_username: str, test_password: str
+) -> Dict[str, Any]:
     """
     中文: 创建一个用于测试的普通用户。
     English: Create a regular user for testing.
@@ -110,15 +139,25 @@ async def test_user(client: httpx.AsyncClient, test_username: str, test_password
     # Here we assume a user creation API exists (needs implementation) or direct DB manipulation
     # 暂时返回空字典 / Return empty dict for now
     # TODO: Implement user creation for tests
-    # Example using API (if /users/ endpoint exists and allows creation):
-    # r = await client.post(
-    #     f"{settings.API_V1_STR}/users/",
-    #     json={"username": test_username, "password": test_password, "email": f"{test_username}@example.com"},
-    # )
-    # assert r.status_code == 201
-    # return r.json()
-    pytest.skip("User creation for tests not implemented yet") # 跳过需要此 fixture 的测试 / Skip tests needing this fixture
-    return {}
+    # Import here to avoid circular dependencies at module level
+    from app import crud, models
+
+    async with TestSessionFactory() as session:
+        user = await crud.user.get_by_username(session, username=test_username)
+        if not user:
+            user_in_create = models.UserCreate(
+                username=test_username,
+                password=test_password,
+                email=f"{test_username}@example.com",
+                is_superuser=False,
+                is_active=True,
+            )
+            user = await crud.user.create(session, obj_in=user_in_create)
+        # Ensure the returned object is suitable for attribute access (e.g., user.username)
+        # If crud.user.create returns a Pydantic model, it's fine.
+        # If it's a dict, ensure keys match expected access patterns.
+        # For consistency and to ensure it's a User model instance:
+        return await crud.user.get_by_username(session, username=test_username)
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -128,34 +167,43 @@ async def superuser_token_headers(client: httpx.AsyncClient) -> Dict[str, str]:
     English: Get authentication token headers for the initial superuser (admin).
     """
     login_data = {
-        "username": "admin", # 使用 main.py 中创建的初始用户 / Use initial user created in main.py
-        "password": "changeme", # 使用默认密码 / Use default password
+        "username": "admin",  # 使用 main.py 中创建的初始用户 / Use initial user created in main.py
+        "password": "changeme",  # 使用默认密码 / Use default password
     }
     # 中文: 明确发送 x-www-form-urlencoded 数据
     # English: Explicitly send x-www-form-urlencoded data
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data, headers=headers)
-    r.raise_for_status() # 确保登录成功 / Ensure login is successful
+    r = await client.post(
+        f"{settings.API_V1_STR}/login/access-token", data=login_data, headers=headers
+    )
+    r.raise_for_status()  # 确保登录成功 / Ensure login is successful
     tokens = r.json()
     a_token = tokens["access_token"]
     headers = {"Authorization": f"Bearer {a_token}"}
     return headers
 
+
 @pytest_asyncio.fixture(scope="module")
-async def normal_user_token_headers(client: httpx.AsyncClient, test_user: Dict[str, Any], test_password: str) -> Dict[str, str]:
+async def normal_user_token_headers(
+    client: httpx.AsyncClient, test_user: Dict[str, Any], test_password: str
+) -> Dict[str, str]:
     """
     中文: 获取普通测试用户的认证令牌 Headers。
     English: Get authentication token headers for a regular test user.
     """
     # login_data = {
     #     "username": test_user["username"],
-    #     "password": test_password,
-    # }
-    # r = await client.post(f"{settings.API_V1_STR}/login/access-token", data=login_data)
-    # r.raise_for_status()
-    # tokens = r.json()
-    # a_token = tokens["access_token"]
-    # headers = {"Authorization": f"Bearer {a_token}"}
-    # return headers
-    pytest.skip("Depends on test_user fixture which is not implemented")
-    return {}
+    login_data = {
+        "username": test_user.username,  # Get username from the test_user object
+        "password": test_password,
+    }
+    # Ensure correct content type
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    r = await client.post(
+        f"{settings.API_V1_STR}/login/access-token", data=login_data, headers=headers
+    )
+    r.raise_for_status()  # Ensure login is successful (e.g. status 200)
+    tokens = r.json()
+    a_token = tokens["access_token"]
+    auth_headers = {"Authorization": f"Bearer {a_token}"}
+    return auth_headers
