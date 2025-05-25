@@ -14,14 +14,13 @@ logger = logging.getLogger(__name__)
 # 中文: 配置 JobStore 和 Executor
 # English: Configure JobStore and Executor
 jobstores = {
-    'default': MemoryJobStore() # 使用内存存储 Job 信息 / Use memory to store Job information
+    "default": MemoryJobStore()  # 使用内存存储 Job 信息 / Use memory to store Job information
 }
-executors = {
-    'default': AsyncIOExecutor() # 使用 asyncio 执行器 / Use asyncio executor
-}
+executors = {"default": AsyncIOExecutor()}  # 使用 asyncio 执行器 / Use asyncio executor
 job_defaults = {
-    'coalesce': True, # 如果错过了执行时间, 只执行一次 / Execute only once if missed execution time
-    'max_instances': 1 # 每个 Job 只允许一个实例同时运行 / Allow only one instance per Job to run concurrently
+    "coalesce": True,  # 如果错过了执行时间, 只执行一次 / Execute only once if missed execution time
+    # 每个 Job 只允许一个实例同时运行 / Allow only one instance per Job to run concurrently
+    "max_instances": 1,
 }
 
 # 中文: 创建并配置 AsyncIOScheduler 实例
@@ -30,8 +29,9 @@ scheduler = AsyncIOScheduler(
     jobstores=jobstores,
     executors=executors,
     job_defaults=job_defaults,
-    timezone=utc # 使用 UTC 时区 / Use UTC timezone
+    timezone=utc,  # 使用 UTC 时区 / Use UTC timezone
 )
+
 
 def start_scheduler():
     """
@@ -44,6 +44,7 @@ def start_scheduler():
     else:
         logger.info("Scheduler is already running.")
 
+
 def shutdown_scheduler():
     """
     中文: 关闭调度器。
@@ -54,6 +55,7 @@ def shutdown_scheduler():
         logger.info("Scheduler shut down.")
     else:
         logger.info("Scheduler is not running.")
+
 
 # 中文: 可以在这里添加默认的调度任务 / Default scheduled tasks can be added here
 # from .link_monitor import trigger_monitoring_job # 稍后导入 / Import later

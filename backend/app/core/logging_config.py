@@ -8,7 +8,8 @@ import os
 
 # 从 app.core.config 导入 settings 实例和 PROJECT_ROOT 常量
 # Import settings instance and PROJECT_ROOT constant from app.core.config
-from app.core.config import settings, PROJECT_ROOT
+from app.core.config import PROJECT_ROOT  # settings is not used in this file
+
 
 def setup_logging():
     """
@@ -21,16 +22,21 @@ def setup_logging():
     # 中文: 获取根日志记录器
     # English: Get the root logger
     root_logger = logging.getLogger()
-    root_logger.setLevel(logging.INFO) # 中文: 设置默认日志级别为 INFO / English: Set default log level to INFO
+    # 中文: 设置默认日志级别为 INFO / English: Set default log level to INFO
+    root_logger.setLevel(logging.INFO)
 
     # 中文: 创建日志格式器
     # English: Create a log formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
 
     # 中文: 创建控制台处理器
     # English: Create a console handler
     console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.INFO) # 中文: 控制台输出 INFO 及以上级别的日志 / English: Console outputs INFO level and above logs
+    # 中文: 控制台输出 INFO 及以上级别的日志 / English: Console outputs INFO level and above
+    # logs
+    console_handler.setLevel(logging.INFO)
     console_handler.setFormatter(formatter)
 
     # 中文: 创建文件处理器 (可选)
@@ -46,11 +52,12 @@ def setup_logging():
     # English: Use RotatingFileHandler for log file rotation
     file_handler = RotatingFileHandler(
         log_file_path,
-        maxBytes=1024 * 1024 * 5, # 5 MB
-        backupCount=5, # 保留 5 个备份文件 / Keep 5 backup files
-        encoding='utf-8'
+        maxBytes=1024 * 1024 * 5,  # 5 MB
+        backupCount=5,  # 保留 5 个备份文件 / Keep 5 backup files
+        encoding="utf-8",
     )
-    file_handler.setLevel(logging.INFO) # 中文: 文件记录 INFO 及以上级别的日志 / English: File logs INFO level and above
+    # 中文: 文件记录 INFO 及以上级别的日志 / English: File logs INFO level and above
+    file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
 
     # 中文: 清除现有的处理器, 避免重复添加
@@ -72,6 +79,7 @@ def setup_logging():
 
     logger = logging.getLogger(__name__)
     logger.info("Logging configured.")
+
 
 if __name__ == "__main__":
     # 中文: 测试日志配置

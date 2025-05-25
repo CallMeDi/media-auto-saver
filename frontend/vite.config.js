@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "path"; // 导入 path 模块 / Import path module
@@ -20,8 +21,33 @@ export default defineConfig({
       "/api/v1": {
         target: "http://localhost:8000", // 后端服务器地址 / Backend server address
         changeOrigin: true, // 需要虚拟主机站点 / Needed for virtual hosted sites
-        // rewrite: (path) => path.replace(/^\/api\/v1/, '/api/v1'), // 通常不需要重写路径 / Usually no need to rewrite path
+        // rewrite: (path) => path.replace(/^\/api\/v1/, '/api\/v1'), // 通常不需要重写路径 / Usually no need to rewrite path
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.js'],
+    coverage: {
+      provider: 'v8', // or 'istanbul'
+      reporter: ['text', 'json', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      all: true,
+      include: ['src'],
+      exclude: [
+        'src/main.js',
+        'src/router/index.js', // Assuming it's mostly boilerplate
+        // 'src/plugins/**',     // Example: if you have a plugins directory
+        'src/tests/**',
+        'src/App.vue',        // If App.vue is simple and mostly router-view
+        'src/utils/constants.js' // Constants are typically not tested for coverage
+      ],
+      // Optional thresholds:
+      // lines: 80,
+      // functions: 80,
+      // branches: 80,
+      // statements: 80
+    }
   },
 });

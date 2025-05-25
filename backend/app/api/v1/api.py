@@ -3,7 +3,16 @@
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import links, history, database, login, password_reset, users, settings # 导入 settings 路由 / Import settings router
+# 导入 settings 路由 / Import settings router
+from app.api.v1.endpoints import (
+    links,
+    history,
+    database,
+    login,
+    password_reset,
+    users,
+    settings,
+)
 
 # 中文: 创建 v1 版本的 API 路由器
 # English: Create the v1 API router
