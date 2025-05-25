@@ -227,6 +227,71 @@ Open the frontend URL (e.g., `http://localhost:5173`) in your web browser.
     *   Password: `changeme`
     *(These are the defaults if not overridden in your `backend/.env` file. It is strongly recommended to change the default password immediately via the "Settings" page after your first login, especially if deploying this application.)*
 
+## 🐳 Docker Deployment
+
+Deploying Media Auto Saver with Docker and Docker Compose simplifies setup and provides a consistent environment.
+
+### Prerequisites
+
+*   **Docker**: Install Docker from [Docker's official website](https://www.docker.com/get-started).
+*   **Docker Compose**: Usually included with Docker Desktop. If not, follow the [Docker Compose installation guide](https://docs.docker.com/compose/install/).
+
+### Configuration
+
+1.  **Backend Environment File (`.env`)**:
+    The backend service requires an environment file for configuration, primarily for the `SECRET_KEY`.
+    *   Create a file named `.env` inside the `backend` directory at the project root: `media-auto-saver/backend/.env`.
+    *   This file will be used by `docker-compose.yml`.
+    *   Add your `SECRET_KEY` to this file. You can generate a strong key using `openssl rand -hex 32`.
+        ```env
+        # In media-auto-saver/backend/.env
+        SECRET_KEY=your_very_strong_random_secret_key_for_docker_here
+        ```
+    *   You can also override other default settings from `backend/app/core/config.py` in this file if needed. For example:
+        ```env
+        # INITIAL_SUPERUSER_USERNAME=admin
+        # INITIAL_SUPERUSER_PASSWORD=changeme
+        ```
+    *   **Important Note on Paths**: The default paths for `DATABASE_URL` (e.g., `sqlite+aiosqlite:///database.db`) and `MEDIA_ROOT` (e.g., `media`) defined in `backend/app/core/config.py` are relative to the application's root directory *inside the container* (`/app_code`). The `docker-compose.yml` file is already configured to map host directories (`./database.db`, `./media/`, `./user_cookies/` in your project root) to these expected locations within the container. Therefore, you typically **do not need** to redefine `DATABASE_URL` or `MEDIA_ROOT` in your `media-auto-saver/backend/.env` file unless you intend to change these paths *within the container structure*.
+
+### Running with Docker Compose
+
+1.  **Navigate to the project root directory** (`media-auto-saver`) in your terminal.
+2.  **Build and start the services**:
+    ```bash
+    docker-compose up -d --build
+    ```
+    *   `--build`: This flag tells Docker Compose to build the images before starting the containers. It's good practice to include it if you've made changes to the Dockerfiles or application code.
+    *   `-d` (detached mode): Runs the containers in the background.
+
+### Accessing the Application
+
+Once the containers are running:
+
+*   **Frontend UI**: Open your browser and go to `http://localhost:5173`
+*   **Backend API**: Accessible at `http://localhost:8000` (e.g., for API docs: `http://localhost:8000/api/v1/docs`)
+
+### Data Persistence
+
+The `docker-compose.yml` is configured to persist data on your host machine:
+
+*   **Database**: The SQLite database file (`database.db`) will be stored in your project root directory (`media-auto-saver/database.db`).
+*   **Media Files**: Downloaded media will be stored in `media-auto-saver/media/`.
+*   **User Cookies**: Custom cookie files will be stored in `media-auto-saver/user_cookies/`.
+
+This ensures your data remains even if you stop or remove the containers.
+
+### Stopping the Application
+
+To stop all running services defined in the `docker-compose.yml`:
+
+1.  **Navigate to the project root directory** (`media-auto-saver`).
+2.  **Run the command**:
+    ```bash
+    docker-compose down
+    ```
+    This will stop and remove the containers. Your persisted data (database, media files) will remain on your host machine.
+
 ## 🤝 Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
